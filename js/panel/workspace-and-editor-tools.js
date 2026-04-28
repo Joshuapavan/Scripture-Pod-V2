@@ -730,11 +730,24 @@
       if (!opts.silent && typeof onAnyControlChange === 'function') onAnyControlChange();
     }
 
+    function setDualVersionTertiaryId(id, opts = {}) {
+      const normalized = (id && bibles && bibles[id]) ? id : null;
+      dualVersionTertiaryId = normalized;
+      const select = document.getElementById('dual-version-tertiary-select');
+      if (select) {
+        select.value = normalized || '';
+      }
+      renderDualVersionPickers();
+      if (!opts.silent && typeof onAnyControlChange === 'function') onAnyControlChange();
+    }
+
     function closeDualVersionMenus() {
       const primaryMenu = document.getElementById('dual-version-primary-menu');
       const secondaryMenu = document.getElementById('dual-version-secondary-menu');
+      const tertiaryMenu = document.getElementById('dual-version-tertiary-menu');
       if (primaryMenu) primaryMenu.classList.remove('open');
       if (secondaryMenu) secondaryMenu.classList.remove('open');
+      if (tertiaryMenu) tertiaryMenu.classList.remove('open');
     }
 
     function toggleDualVersionMenu(kind, event) {
@@ -742,7 +755,8 @@
         event.preventDefault();
         event.stopPropagation();
       }
-      const menu = document.getElementById(kind === 'secondary' ? 'dual-version-secondary-menu' : 'dual-version-primary-menu');
+      const menuId = (kind === 'secondary') ? 'dual-version-secondary-menu' : (kind === 'tertiary') ? 'dual-version-tertiary-menu' : 'dual-version-primary-menu';
+      const menu = document.getElementById(menuId);
       if (!menu) return;
       const isOpen = menu.classList.contains('open');
       closeDualVersionMenus();
@@ -762,6 +776,10 @@
         const select = document.getElementById('dual-version-secondary-select');
         if (select) select.value = value || '';
         handleDualSecondarySelectChange();
+      } else if (kind === 'tertiary') {
+        const select = document.getElementById('dual-version-tertiary-select');
+        if (select) select.value = value || '';
+        handleDualTertiarySelectChange();
       } else {
         const select = document.getElementById('dual-version-primary-select');
         if (select) select.value = value || '';
@@ -770,22 +788,36 @@
       closeDualVersionMenus();
     }
 
+    // tertiary support
+    function handleDualTertiarySelectChange() {
+      const select = document.getElementById('dual-version-tertiary-select');
+      if (!select) return;
+      setDualVersionTertiaryId(select.value);
+      handleDualFontOverrideState();
+    }
+
     function renderDualVersionPickers() {
       const versions = Object.keys(bibles || {});
       const primaryBtn = document.getElementById('dual-version-primary-btn');
       const secondaryBtn = document.getElementById('dual-version-secondary-btn');
+      const tertiaryBtn = document.getElementById('dual-version-tertiary-btn');
       const primaryMenu = document.getElementById('dual-version-primary-menu');
       const secondaryMenu = document.getElementById('dual-version-secondary-menu');
+      const tertiaryMenu = document.getElementById('dual-version-tertiary-menu');
       const primarySelect = document.getElementById('dual-version-primary-select');
       const secondarySelect = document.getElementById('dual-version-secondary-select');
-      if (!primaryBtn || !secondaryBtn || !primaryMenu || !secondaryMenu || !primarySelect || !secondarySelect) return;
+      const tertiarySelect = document.getElementById('dual-version-tertiary-select');
+      if (!primaryBtn || !secondaryBtn || !primaryMenu || !secondaryMenu || !primarySelect || !secondarySelect || !tertiaryBtn || !tertiaryMenu || !tertiarySelect) return;
 
       const primaryValue = primarySelect.value || '';
       const secondaryValue = secondarySelect.value || '';
+      const tertiaryValue = tertiarySelect.value || '';
       primaryBtn.textContent = primaryValue || 'Select version';
       secondaryBtn.textContent = secondaryValue || t('ui_select_secondary_version');
+      tertiaryBtn.textContent = tertiaryValue || t('ui_select_tertiary_version') || 'Tertiary version';
       primaryBtn.disabled = versions.length === 0;
       secondaryBtn.disabled = versions.length < 2;
+      tertiaryBtn.disabled = versions.length < 3;
 
       primaryMenu.innerHTML = '';
       const primarySearchWrap = document.createElement('div');
@@ -860,6 +892,47 @@
       secondarySearchInput.addEventListener('input', () => {
         const q = normalizeSearchText(secondarySearchInput.value || '').trim();
         secondaryRows.forEach(row => {
+          const label = row.dataset.searchLabel || '';
+          row.style.display = !q || label.includes(q) ? '' : 'none';
+        });
+      });
+
+      // tertiary menu
+      tertiaryMenu.innerHTML = '';
+      const tertiarySearchWrap = document.createElement('div');
+      tertiarySearchWrap.className = 'dual-version-picker-search';
+      const tertiarySearchInput = document.createElement('input');
+      tertiarySearchInput.type = 'text';
+      tertiarySearchInput.placeholder = t('ui_search_generic');
+      tertiarySearchInput.autocomplete = 'off';
+      tertiarySearchInput.setAttribute('aria-label', t('ui_search_generic'));
+      tertiarySearchWrap.appendChild(tertiarySearchInput);
+      tertiaryMenu.appendChild(tertiarySearchWrap);
+      const tertiaryRows = [];
+      versions.forEach((ver) => {
+        const disabled = (ver === activeBibleVersion) || (ver === dualVersionSecondaryId);
+        const wrapper = document.createElement('div');
+        wrapper.className = `footer-bv-item ${tertiaryValue === ver ? 'active' : ''}${disabled ? ' disabled' : ''}`;
+        wrapper.dataset.searchLabel = normalizeSearchText(ver);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'footer-bv-btn';
+        btn.innerHTML = `
+          <svg class="footer-bv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          <span>${esc(ver)}</span>
+        `;
+        btn.disabled = disabled;
+        btn.onclick = () => selectDualVersionOption('tertiary', ver);
+        wrapper.appendChild(btn);
+        tertiaryRows.push(wrapper);
+        tertiaryMenu.appendChild(wrapper);
+      });
+      tertiarySearchInput.addEventListener('input', () => {
+        const q = normalizeSearchText(tertiarySearchInput.value || '').trim();
+        tertiaryRows.forEach(row => {
           const label = row.dataset.searchLabel || '';
           row.style.display = !q || label.includes(q) ? '' : 'none';
         });
@@ -1109,6 +1182,7 @@
     function updateDualVersionSelects() {
       const primarySelect = document.getElementById('dual-version-primary-select');
       const secondarySelect = document.getElementById('dual-version-secondary-select');
+      const tertiarySelect = document.getElementById('dual-version-tertiary-select');
       const versions = Object.keys(bibles || []);
       if (primarySelect) {
         primarySelect.innerHTML = '';
@@ -1151,6 +1225,30 @@
         }
         secondarySelect.disabled = versions.length < 2;
       }
+      if (tertiarySelect) {
+        tertiarySelect.innerHTML = '';
+        const placeholder3 = document.createElement('option');
+        placeholder3.value = '';
+        placeholder3.textContent = t('ui_select_tertiary_version') || 'Select tertiary version';
+        placeholder3.disabled = true;
+        placeholder3.selected = !dualVersionTertiaryId;
+        tertiarySelect.appendChild(placeholder3);
+        versions.forEach(ver => {
+          const opt = document.createElement('option');
+          opt.value = ver;
+          opt.textContent = ver;
+          if (ver === activeBibleVersion) opt.disabled = true;
+          if (ver === dualVersionSecondaryId) opt.disabled = true;
+          if (ver === dualVersionTertiaryId) opt.selected = true;
+          tertiarySelect.appendChild(opt);
+        });
+        if (dualVersionTertiaryId && !versions.includes(dualVersionTertiaryId)) {
+          setDualVersionTertiaryId(null, { silent: true });
+        } else {
+          tertiarySelect.value = dualVersionTertiaryId || '';
+        }
+        tertiarySelect.disabled = versions.length < 3;
+      }
       renderDualVersionPickers();
     }
 
@@ -1180,6 +1278,7 @@
         restoreLongVerseFullFontOverride(true);
         restoreDualFontOverride(true);
         setDualVersionSecondaryId(null, { silent: true });
+        setDualVersionTertiaryId(null, { silent: true });
       }
       if (!dualVersionModeEnabled) {
         setDualVersionSecondaryId(null, { silent: true });

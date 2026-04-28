@@ -868,8 +868,96 @@
           dualSectionHtml = `<div class="dual-secondary-wrapper">${secondarySegment}</div>`;
         }
       }
+      // tertiary support (display a third version underneath secondary)
+      let tertiarySectionHtml = '';
+      const storedTertiarySnapshot = (liveItem && liveItem.tertiarySnapshot) ? liveItem.tertiarySnapshot : null;
+      const globalTertiaryActive = dualVersionModeEnabled && !!dualVersionTertiaryId && !useCustomStyle && livePointer.kind === 'bible';
+      if (globalTertiaryActive || storedTertiarySnapshot) {
+        let tertiarySegment = '';
+        if (storedTertiarySnapshot) {
+          const tertiaryRaw = storedTertiarySnapshot.raw || '';
+          const tertiaryLabel = storedTertiarySnapshot.referenceLabel || '';
+          const tertiaryText = storedTertiarySnapshot.text || '';
+          tertiarySegment = (mode === 'full')
+            ? buildFullBibleSegment({
+              referenceLabel: tertiaryLabel,
+              verseHtml: tertiaryText,
+              refSize: refFontSize,
+              refColor,
+              refBgColor,
+              verseAlign: verseAlignFull,
+              refAlign: refAlignFull,
+              verseShadowStyle,
+              refPosition: refPositionFull,
+              refTextTransform: activeFullRefTextTransform
+            })
+            : buildLtBibleSegment({
+              referenceLabel: tertiaryLabel,
+              verseHtml: tertiaryText,
+              refSize: ltRefSize,
+              refColor,
+              refBgColor,
+              alignValue: ltRefAlignValue,
+              verseShadowStyle,
+              allowBackground: allowLtRefBg,
+              padding: '3px 16px',
+              borderRadius: '5px',
+              refTextTransform: activeLtRefTextTransform
+            });
+        } else {
+          const tertiaryList = bibles[dualVersionTertiaryId];
+          const chapterIndexForTertiary = getDualBibleChapterIndex(liveItem, livePointer);
+          const tertiaryItem = (tertiaryList && chapterIndexForTertiary != null)
+            ? tertiaryList[chapterIndexForTertiary]
+            : (tertiaryList ? tertiaryList[livePointer.index] : null);
+          if (tertiaryItem) {
+            const tertiaryPages = getPagesFromItem(tertiaryItem, true, effectiveLiveLinesPerPage);
+            const tertiaryPage = tertiaryPages[Math.min(liveLineCursor, Math.max(0, tertiaryPages.length - 1))] || tertiaryPages[0];
+            if (tertiaryPage) {
+              let thirdText = tertiaryPage.text;
+              if (!showVerseNos) {
+                thirdText = thirdText.replace(/<span class="jo-verse-sup">.*?<\/span>\s*/g, '');
+              }
+              thirdText = convertHighlightsToHtml(thirdText);
+              const tertiaryRef = getBibleRefForPage(tertiaryItem, tertiaryPage.raw, tertiaryPage.verseCount);
+              const tertiaryVersionLabel = formatBibleVersionLabel(tertiaryItem.version || "");
+              const tertiaryVerText = (showVersion && tertiaryVersionLabel) ? ` (${tertiaryVersionLabel})` : "";
+              const tertiaryLabel = `${tertiaryRef}${tertiaryVerText}`;
+              tertiarySegment = (mode === 'full')
+                ? buildFullBibleSegment({
+                  referenceLabel: tertiaryLabel,
+                  verseHtml: thirdText,
+                  refSize: refFontSize,
+                  refColor,
+                  refBgColor,
+                  verseAlign: verseAlignFull,
+                  refAlign: refAlignFull,
+                  verseShadowStyle,
+                  refPosition: refPositionFull,
+                  refTextTransform: activeFullRefTextTransform
+                })
+                : buildLtBibleSegment({
+                  referenceLabel: tertiaryLabel,
+                  verseHtml: thirdText,
+                  refSize: ltRefSize,
+                  refColor,
+                  refBgColor,
+                  alignValue: ltRefAlignValue,
+                  verseShadowStyle,
+                  allowBackground: allowLtRefBg,
+                  padding: '3px 16px',
+                  borderRadius: '5px',
+                  refTextTransform: activeLtRefTextTransform
+                });
+            }
+          }
+        }
+        if (tertiarySegment) {
+          tertiarySectionHtml = `<div class="triple-tertiary-wrapper">${tertiarySegment}</div>`;
+        }
+      }
       if (dualSectionHtml) {
-        outHtml = `<div class="dual-primary-block">${outHtml}</div>${dualSectionHtml}`;
+        outHtml = `<div class="dual-primary-block">${outHtml}</div>${dualSectionHtml}${tertiarySectionHtml}`;
       }
       const payload = {
         text: outHtml,
@@ -937,6 +1025,7 @@
         autoResizeLT: autoResizeLT,
         dualVersionMode: !!dualSectionHtml,
         dualVersionSecondaryId: dualVersionSecondaryId || null,
+        dualVersionTertiaryId: dualVersionTertiaryId || null,
         dualVersionPrimaryId: (livePointer.kind === 'bible') ? livePointer.version : null,
         bilingualEnabled: livePointer.kind === 'songs' && !!(songTextPair &&
           songTextPair.bilingualEnabled),

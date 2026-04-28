@@ -510,7 +510,8 @@
         refColor: document.getElementById('ref-color')?.value,
         refBgColor: document.getElementById('ref-bg-color')?.value,
         dualVersionModeEnabled,
-        dualVersionSecondaryId
+        dualVersionSecondaryId,
+        dualVersionTertiaryId
       };
     }
 
@@ -743,6 +744,7 @@
         referenceShadowEnabled, verseShadowEnabled,
         referenceTextCapitalized: document.getElementById('capitalize-ref-text')?.checked,
         refBgEnabled, dualVersionModeEnabled, dualVersionSecondaryId
+        , dualVersionTertiaryId
       };
     }
 
@@ -852,6 +854,7 @@
       if (next.referenceTextCapitalized != null) referenceTextCapitalized = !!next.referenceTextCapitalized;
       if (next.dualVersionModeEnabled != null) dualVersionModeEnabled = !!next.dualVersionModeEnabled;
       if (Object.prototype.hasOwnProperty.call(next, 'dualVersionSecondaryId')) dualVersionSecondaryId = next.dualVersionSecondaryId || null;
+      if (Object.prototype.hasOwnProperty.call(next, 'dualVersionTertiaryId')) dualVersionTertiaryId = next.dualVersionTertiaryId || null;
     }
 
     function updateSettingsTargetControl() {
@@ -1038,6 +1041,7 @@
       if (next.referenceTextCapitalized != null) setReferenceCapitalized(!!next.referenceTextCapitalized, { silent: true });
       if (next.dualVersionModeEnabled != null) setDualVersionModeEnabled(!!next.dualVersionModeEnabled, { silent: true });
       if (Object.prototype.hasOwnProperty.call(next, 'dualVersionSecondaryId')) setDualVersionSecondaryId(next.dualVersionSecondaryId || null, { silent: true });
+      if (Object.prototype.hasOwnProperty.call(next, 'dualVersionTertiaryId')) setDualVersionTertiaryId(next.dualVersionTertiaryId || null, { silent: true });
       setLtFontInputValue(getEffectiveLtFont());
       updateFullAlignButtons();
       updateLtAlignButtons();

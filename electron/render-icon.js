@@ -2,7 +2,7 @@ const { app, nativeImage } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
-const sourcePath = path.resolve(process.argv[2] || 'electron/resources/bible-song-pro-icon.svg');
+const sourcePath = path.resolve(process.argv[2] || 'electron/resources/scripture-pod-pro-icon.svg');
 const outputDir = path.resolve(process.argv[3] || 'electron/resources/win-iconset');
 const sizes = [16, 24, 32, 48, 64, 128, 256, 512];
 

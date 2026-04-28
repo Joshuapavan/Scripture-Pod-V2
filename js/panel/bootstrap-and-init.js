@@ -861,6 +861,9 @@
     if (ui.dualVersionSecondaryId != null) {
       setDualVersionSecondaryId(ui.dualVersionSecondaryId, { silent: true });
     }
+    if (ui.dualVersionTertiaryId != null) {
+      setDualVersionTertiaryId(ui.dualVersionTertiaryId, { silent: true });
+    }
       if (ui.songTransitionType) document.getElementById('song-transition-type').value = ui.songTransitionType;
       if (ui.songTransitionDuration != null) document.getElementById('song-transition-duration').value = ui.songTransitionDuration;
       if (ui.animateBgTransitions != null) document.getElementById('animate-bg-transitions').checked = !!ui.animateBgTransitions;

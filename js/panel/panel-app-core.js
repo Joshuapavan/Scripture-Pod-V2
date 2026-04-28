@@ -51,6 +51,7 @@
       'textColor',
       'refColor',
       'refBgColor'
+      , 'dualVersionTertiaryId'
     ];
     const MODE_SETTINGS_KEYS = [
       'fontSizeFull',
@@ -86,7 +87,8 @@
       'showVerseNos',
       'versionSwitchUpdatesLive',
       'dualVersionModeEnabled',
-      'dualVersionSecondaryId'
+      'dualVersionSecondaryId',
+      'dualVersionTertiaryId'
     ];
     const DEFAULT_SONG_BILINGUAL_SETTINGS = {
       bilingualEnabled: false,
@@ -280,6 +282,7 @@
     let ltRefFontSize = 30;
     let dualVersionModeEnabled = false;
     let dualVersionSecondaryId = null;
+    let dualVersionTertiaryId = null;
     let dualModeFontOverrideSnapshot = null;
     let dualModeFontOverrideActive = false;
     let dualModeLtSnapshot = null;

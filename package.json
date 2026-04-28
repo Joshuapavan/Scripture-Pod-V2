@@ -35,7 +35,7 @@
     },
     "mac": {
       "category": "public.app-category.productivity",
-      "icon": "bible-song-pro-icon.icns",
+      "icon": "scripture-pod-pro.icns",
       "identity": null,
       "target": [
         "dir",
@@ -48,7 +48,7 @@
         "nsis",
         "portable"
       ],
-      "icon": "bible-song-pro-icon.ico",
+      "icon": "scripture-pod-pro.ico",
       "publisherName": "Johnson Olakotan"
     },
     "nsis": {
