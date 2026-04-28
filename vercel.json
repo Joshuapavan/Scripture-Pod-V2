@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/panel",
+      "destination": "/Bible Song Pro panel.html"
+    },
+    {
+      "source": "/display",
+      "destination": "/BSP_display.html"
+    }
+  ]
+}
