@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/panel",
-      "destination": "/Bible Song Pro panel.html"
+      "destination": "/Scripture Pod Pro Panel.html"
     },
     {
       "source": "/display",
-      "destination": "/BSP_display.html"
+      "destination": "/Scripture Pod Pro_display.html"
     }
   ]
 }

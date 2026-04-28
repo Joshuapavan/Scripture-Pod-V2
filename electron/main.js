@@ -51,8 +51,8 @@ function getLocalServerInfo() {
     relayPort: LOCAL_RELAY_PORT,
     preferredHost,
     availableHosts: ['127.0.0.1', ...addresses],
-    displayPath: '/BSP_display.html',
-    displayUrl: `http://${preferredHost}:${LOCAL_HTTP_PORT}/BSP_display.html?hostMode=vmix&relay=ws://${preferredHost}:${LOCAL_RELAY_PORT}`,
+    displayPath: '/Scripture Pod Pro_display.html',
+    displayUrl: `http://${preferredHost}:${LOCAL_HTTP_PORT}/Scripture%20Pod%20Pro_display.html?hostMode=vmix&relay=ws://${preferredHost}:${LOCAL_RELAY_PORT}`,
     relayUrl: `ws://${preferredHost}:${LOCAL_RELAY_PORT}`
   };
 }
@@ -61,7 +61,7 @@ function startHttpServer() {
   if (httpServer) return;
   httpServer = http.createServer((req, res) => {
     const url = new URL(req.url || '/', `http://${req.headers.host || '127.0.0.1'}`);
-    const pathname = decodeURIComponent(url.pathname === '/' ? '/BSP_display.html' : url.pathname);
+    const pathname = decodeURIComponent(url.pathname === '/' ? '/Scripture%20Pod%20Pro_display.html' : url.pathname);
     const target = resolveAppFile(pathname.replace(/^\/+/, ''));
     if (!target.startsWith(path.join(__dirname, '..'))) {
       res.writeHead(403);
@@ -112,7 +112,7 @@ function createMainWindow() {
     minWidth: 560,
     minHeight: 760,
     backgroundColor: '#101318',
-    title: 'Bible Song Pro',
+    title: 'Scripture Pod Pro',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -121,7 +121,7 @@ function createMainWindow() {
     }
   });
 
-  mainWindow.loadFile(resolveAppFile('Bible Song Pro panel.html'));
+  mainWindow.loadFile(resolveAppFile('Scripture Pod Pro Panel.html'));
   mainWindow.on('closed', () => {
     mainWindow = null;
     if (outputWindow && !outputWindow.isDestroyed()) {
@@ -166,7 +166,7 @@ function createOutputWindow(options = {}) {
     }
   });
 
-  outputWindow.loadFile(resolveAppFile('BSP_display.html'), {
+  outputWindow.loadFile(resolveAppFile('Scripture Pod Pro_display.html'), {
     query: {
       standalone: '1',
       hostMode: 'standalone'

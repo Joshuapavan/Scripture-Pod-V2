@@ -4140,7 +4140,7 @@
         message,
         '',
         '---',
-        'Submitted from Bible Song Pro',
+        'Submitted from Scripture Pod Pro',
         `Host mode: ${getHostMode()}`,
         `Workspace layout: ${workspaceLayoutMode}`,
         `Active tab: ${sidebarTab}`,
@@ -4168,7 +4168,7 @@
             title: draft.title,
             body: draft.body,
             message: draft.body,
-            app: 'Bible Song Pro',
+            app: 'Scripture Pod Pro',
             repoUrl: BSP_GITHUB_REPO_URL,
             issuesUrl: BSP_GITHUB_ISSUES_URL,
             context: {

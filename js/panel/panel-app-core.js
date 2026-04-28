@@ -7,11 +7,11 @@
     const BSP_GITHUB_ISSUES_URL = `${BSP_GITHUB_REPO_URL}/issues`;
     const BSP_CONTACT_URL = 'https://www.instagram.com/johnsonolakotan';
     const BSP_LEGACY_LOCAL_FEEDBACK_API_URL = 'http://127.0.0.1:8787/api/github-feedback';
-    const BSP_DEFAULT_FEEDBACK_API_URL = 'https://bible-song-pro-feedback.johnbatey-bsp.workers.dev/api/github-feedback';
+    const BSP_DEFAULT_FEEDBACK_API_URL = 'https://scripture-pod-pro-feedback.johnbatey-bsp.workers.dev/api/github-feedback';
     const VMIX_OUTPUT_MODE_DEDICATED = 'dedicated-input';
     const VMIX_OUTPUT_MODE_OVERLAY = 'overlay';
     const VMIX_OUTPUT_MODE_MANUAL = 'manual';
-    const DB_NAME = 'bible-song-pro';
+    const DB_NAME = 'scripture-pod-pro';
     const DB_VERSION = 1;
     const STORE_SONGS = 'songs';
     const STORE_BIBLES = 'bibles';
@@ -20,7 +20,7 @@
     const REMOTE_SHOW_PAIR_CODE_LENGTH = 6;
     const REMOTE_SHOW_DEFAULT_PORT = 5510;
     const RELAY_DEFAULT_PORT = 5511;
-    const SYNC_MIRROR_DB_NAME = 'bible-song-pro-sync';
+    const SYNC_MIRROR_DB_NAME = 'scripture-pod-pro-sync';
     const SYNC_MIRROR_DB_VERSION = 1;
     const SYNC_MIRROR_STORE = 'messages';
     const SYNC_MIRROR_LAST_KEY = 'last';
@@ -161,7 +161,7 @@
       port: '8088',
       password: '',
       displayHost: '',
-      outputInputName: 'Bible Song Pro Output',
+      outputInputName: 'Scripture Pod Pro Output',
       outputInputKey: '',
       outputMode: VMIX_OUTPUT_MODE_DEDICATED,
       overlayChannel: '1',

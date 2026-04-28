@@ -873,7 +873,7 @@
       }
       if (skippedUnsupported > 0) {
         showToast(t('import_skipped_unsupported').replace('{count}', String(skippedUnsupported)));
-      }
+    }
       renderSongs();
       ensureSelectionFallback();
       input.value = "";
@@ -890,7 +890,7 @@
       const d = date || new Date();
       const pad = (n) => String(n).padStart(2, '0');
       const stamp = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
-      return `BibleSongPro_Backup_${stamp}.json`;
+      return `ScripturePodPro_Backup_${stamp}.json`;
     }
 
     function mergeAppStateWithDefaults(raw) {
@@ -1228,7 +1228,7 @@
         if (bgUploadDataUrl != null) settings.bgUploadDataUrl = bgUploadDataUrl;
         if (bgVideoUploadDataUrl != null) settings.bgVideoUploadDataUrl = bgVideoUploadDataUrl;
         const backup = {
-          app: 'Bible Song Pro',
+          app: 'Scripture Pod Pro',
           backupVersion: 1,
           exportedAt: new Date().toISOString(),
           data: {
@@ -1340,7 +1340,7 @@
       try {
         const text = await file.text();
         const parsed = JSON.parse(text);
-        if (!parsed || parsed.app !== 'Bible Song Pro') {
+        if (!parsed || parsed.app !== 'Scripture Pod Pro') {
           showToast(t('backup_invalid_file'));
           return;
         }

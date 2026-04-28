@@ -54,7 +54,7 @@ function normalizeIssueBody(payload) {
     ...details.map((item) => `- ${item}`),
     '',
     '---',
-    '*This issue was automatically created from Bible Song Pro in-app feedback.*'
+    '*This issue was automatically created from Scripture Pod Pro in-app feedback.*'
   ].join('\n').trim();
 }
 
@@ -74,7 +74,7 @@ async function createGitHubIssue(env, payload) {
       'Accept': 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
       'Content-Type': 'application/json',
-      'User-Agent': 'Bible-Song-Pro-Feedback-Worker'
+      'User-Agent': 'Scripture-Pod-Pro-Feedback-Worker'
     },
     body: JSON.stringify({
       title: String(payload.title || '').trim() || normalizeIssueTitle(message),

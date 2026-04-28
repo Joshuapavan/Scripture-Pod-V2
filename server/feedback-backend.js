@@ -74,7 +74,7 @@ async function createGitHubIssue(payload) {
     headers: {
       'Accept': 'application/vnd.github+json',
       'Authorization': `Bearer ${GITHUB_TOKEN}`,
-      'User-Agent': 'Bible-Song-Pro-Feedback-Backend',
+      'User-Agent': 'Scripture-Pod-Pro-Feedback-Backend',
       'X-GitHub-Api-Version': '2022-11-28',
       'Content-Type': 'application/json'
     },

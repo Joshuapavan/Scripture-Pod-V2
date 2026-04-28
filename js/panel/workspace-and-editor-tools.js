@@ -81,7 +81,7 @@
         params.set('relayPort', relayPort);
         params.set('relay', `ws://${relayHost}:${relayPort}`);
       }
-      return `BSP_display.html?${params.toString()}`;
+      return `Scripture%20Pod%20Pro_display.html?${params.toString()}`;
     }
 
     function shouldSkipPunctuationLine(line) {

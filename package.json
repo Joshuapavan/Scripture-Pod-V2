@@ -1,7 +1,7 @@
 {
-  "name": "bible-song-pro-vmix-desktop",
+  "name": "scripture-pod-pro-vmix-desktop",
   "version": "2.0.0",
-  "description": "Bible Song Pro desktop preview wrapper for macOS",
+  "description": "Scripture Pod Pro desktop preview wrapper for macOS",
   "main": "electron/main.js",
   "author": "Johnson Olakotan",
   "license": "UNLICENSED",
@@ -16,11 +16,11 @@
     "dist:linux": "electron-builder --linux"
   },
   "build": {
-    "appId": "com.biblesongpro.desktop",
-    "productName": "Bible Song Pro",
+    "appId": "com.scripturepodpro.desktop",
+    "productName": "Scripture Pod Pro",
     "files": [
-      "Bible Song Pro panel.html",
-      "BSP_display.html",
+      "Scripture Pod Pro Panel.html",
+      "Scripture Pod Pro_display.html",
       "index.html",
       "assets/**/*",
       "js/**/*",
