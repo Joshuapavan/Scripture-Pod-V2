@@ -349,14 +349,37 @@
       try {
         bgVideo.addEventListener('ended', function () {
           try {
-            // Only attempt to restart when loop is enabled and a src exists
+            console.debug('[DISPLAY] bgVideo ended event fired', { src: bgVideo && bgVideo.src, loop: !!(bgVideo && bgVideo.loop) });
+            if (!bgVideo) return;
+            // If a seamless-loop controller is present, don't interfere
+            var skip = false;
+            try {
+              var ctrl = (typeof getSeamlessLoopController === 'function') ? getSeamlessLoopController(bgVideo) : null;
+              if (ctrl && ctrl.enabled) skip = true;
+            } catch (e) {}
+            if (skip) return;
             if (bgVideo.loop && bgVideo.src) {
+              // First attempt: simple rewind + play
               try { bgVideo.currentTime = 0; } catch (_) {}
-              bgVideo.play().catch(function () {});
+              var p = bgVideo.play();
+              if (p && p.catch) {
+                p.catch(function (err) {
+                  console.debug('[DISPLAY] bgVideo.play() rejected on ended — attempting reload', err);
+                  // Fallback: reset src and reload then play
+                  try {
+                    var orig = bgVideo.src;
+                    bgVideo.removeAttribute('src');
+                    try { bgVideo.load(); } catch (_) {}
+                    bgVideo.src = orig;
+                    try { bgVideo.load(); } catch (_) {}
+                    bgVideo.play().catch(function (e) { console.debug('[DISPLAY] bgVideo reload/play failed', e); });
+                  } catch (e2) { console.debug('[DISPLAY] bgVideo ended fallback failed', e2); }
+                });
+              }
             }
-          } catch (_) {}
+          } catch (e) { console.debug('[DISPLAY] bgVideo ended handler error', e); }
         });
-      } catch (_) {}
+      } catch (e) { console.debug('[DISPLAY] could not bind bgVideo ended handler', e); }
       const sceneCompositor = document.getElementById('scene-compositor');
       const stage = document.getElementById('stage');
       const ltWrap = document.getElementById('lt-wrap');

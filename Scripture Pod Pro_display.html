@@ -813,28 +813,60 @@
       if (elements.bgVideo) {
         elements.bgVideo.addEventListener('ended', function () {
           try {
-            const ctrl = getSeamlessLoopController(elements.bgVideo);
-            if ((!ctrl || !ctrl.enabled) && elements.bgVideo.loop && elements.bgVideo.src) {
+            console.debug('[DISPLAY] bgVideo ended', { src: elements.bgVideo && elements.bgVideo.src, loop: !!(elements.bgVideo && elements.bgVideo.loop) });
+            var ctrl = null;
+            try { ctrl = getSeamlessLoopController(elements.bgVideo); } catch (e) {}
+            if (ctrl && ctrl.enabled) return;
+            if (elements.bgVideo.loop && elements.bgVideo.src) {
               try { elements.bgVideo.currentTime = 0; } catch (_) {}
-              elements.bgVideo.play().catch(() => {});
+              var p = elements.bgVideo.play();
+              if (p && p.catch) {
+                p.catch(function (err) {
+                  console.debug('[DISPLAY] bgVideo.play() rejected — reload fallback', err);
+                  try {
+                    const orig = elements.bgVideo.src;
+                    elements.bgVideo.removeAttribute('src');
+                    try { elements.bgVideo.load(); } catch (_) {}
+                    elements.bgVideo.src = orig;
+                    try { elements.bgVideo.load(); } catch (_) {}
+                    elements.bgVideo.play().catch(function (e) { console.debug('[DISPLAY] bgVideo reload/play failed', e); });
+                  } catch (e2) { console.debug('[DISPLAY] bgVideo reload fallback error', e2); }
+                });
+              }
             }
-          } catch (_) {}
+          } catch (e) { console.debug('[DISPLAY] bgVideo ended handler error', e); }
         });
       }
-    } catch (_) {}
+    } catch (e) { console.debug('[DISPLAY] bind bgVideo ended handler failed', e); }
     try {
       if (elements.ltVideo) {
         elements.ltVideo.addEventListener('ended', function () {
           try {
-            const ctrl = getSeamlessLoopController(elements.ltVideo);
-            if ((!ctrl || !ctrl.enabled) && elements.ltVideo.loop && elements.ltVideo.src) {
+            console.debug('[DISPLAY] ltVideo ended', { src: elements.ltVideo && elements.ltVideo.src, loop: !!(elements.ltVideo && elements.ltVideo.loop) });
+            var ctrl = null;
+            try { ctrl = getSeamlessLoopController(elements.ltVideo); } catch (e) {}
+            if (ctrl && ctrl.enabled) return;
+            if (elements.ltVideo.loop && elements.ltVideo.src) {
               try { elements.ltVideo.currentTime = 0; } catch (_) {}
-              elements.ltVideo.play().catch(() => {});
+              var p2 = elements.ltVideo.play();
+              if (p2 && p2.catch) {
+                p2.catch(function (err) {
+                  console.debug('[DISPLAY] ltVideo.play() rejected — reload fallback', err);
+                  try {
+                    const orig = elements.ltVideo.src;
+                    elements.ltVideo.removeAttribute('src');
+                    try { elements.ltVideo.load(); } catch (_) {}
+                    elements.ltVideo.src = orig;
+                    try { elements.ltVideo.load(); } catch (_) {}
+                    elements.ltVideo.play().catch(function (e) { console.debug('[DISPLAY] ltVideo reload/play failed', e); });
+                  } catch (e2) { console.debug('[DISPLAY] ltVideo reload fallback error', e2); }
+                });
+              }
             }
-          } catch (_) {}
+          } catch (e) { console.debug('[DISPLAY] ltVideo ended handler error', e); }
         });
       }
-    } catch (_) {}
+    } catch (e) { console.debug('[DISPLAY] bind ltVideo ended handler failed', e); }
 
     // Simple on-screen debug logger (temporary)
     function debug(msg, isError = false) {
