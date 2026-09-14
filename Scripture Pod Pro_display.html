@@ -15,23 +15,23 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
-    
+
     @font-face {
       font-family: 'CustomFont';
       src: url('') format('truetype');
     }
-    
+
     @font-face {
       font-family: 'CMGSans';
       src: local('Arial'), local('Helvetica');
     }
-    
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body, html {
       width: 100%;
       height: 100%;
@@ -109,17 +109,17 @@
       overflow: hidden;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                  height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                  bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      background: linear-gradient(to top, 
-                  rgba(0, 0, 0, 1) 0%, 
-                  rgba(0, 0, 0, 0.85) 15%, 
-                  rgba(0, 0, 0, 0.7) 30%, 
-                  rgba(0, 0, 0, 0.5) 50%, 
-                  rgba(0, 0, 0, 0.3) 70%, 
-                  rgba(0, 0, 0, 0.1) 85%, 
+      background: linear-gradient(to top,
+                  rgba(0, 0, 0, 1) 0%,
+                  rgba(0, 0, 0, 0.85) 15%,
+                  rgba(0, 0, 0, 0.7) 30%,
+                  rgba(0, 0, 0, 0.5) 50%,
+                  rgba(0, 0, 0, 0.3) 70%,
+                  rgba(0, 0, 0, 0.1) 85%,
                   rgba(0, 0, 0, 0) 100%);
       display: flex;
       align-items: flex-end;
@@ -133,8 +133,8 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                  transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), 
+      transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
                   background-color 0.2s ease;
     }
 
@@ -166,8 +166,8 @@
       text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
       max-width: 100%;
       width: 100%;
-      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       opacity: 0;
       text-align: center;
@@ -195,8 +195,8 @@
       font-size: 36px;
       color: white;
       text-align: center;
-      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                  top 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  top 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       backdrop-filter: blur(10px);
@@ -233,8 +233,8 @@
       position: absolute;
       display: none;
       width: 100%;
-      background: linear-gradient(90deg, 
-                  rgba(0, 94, 41, 0.95) 0%, 
+      background: linear-gradient(90deg,
+                  rgba(0, 94, 41, 0.95) 0%,
                   rgba(23, 142, 76, 0.95) 100%);
       z-index: 2;
       align-items: center;
@@ -247,10 +247,10 @@
       padding: 20px 0 20px 60px;
       box-sizing: border-box;
       min-height: 220px;
-      transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                  top 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                  left 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                  padding 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+      transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  top 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       pointer-events: none;
@@ -260,7 +260,7 @@
     .lt-bible #text-container {
       text-align: left;
     }
-    
+
     .lt-song #text-container {
       text-align: center;
     }
@@ -270,7 +270,7 @@
       display: block;
       transition: all 0.3s ease;
     }
-    
+
     .dual-primary-block {
       display: block;
     }
@@ -313,7 +313,7 @@
       opacity: 0.88;
       font-size: 0.92em;
     }
-    
+
     .jo-highlight {
       display: block;
       margin: 0 0 0.35em;
@@ -338,11 +338,11 @@
     .lt-bible .jo-ref-line {
       font-family: 'Montserrat', sans-serif !important;
     }
-    
+
     .jo-ref-tail {
       margin-top: 20px !important;
     }
-    
+
     .jo-verse-sup {
       font-size: 0.5em !important;
       vertical-align: super !important;
@@ -367,7 +367,7 @@
       justify-content: flex-end;
       align-items: flex-start;
     }
-    
+
     .lt-bible.mode-lt #lt-bg-wrap {
       bottom: 0;
       display: flex;
@@ -375,11 +375,11 @@
       justify-content: center;
       opacity: 1;
     }
-    
+
     .lt-bible.mode-lt #lt-bg-inner {
       transform-origin: center bottom;
     }
-    
+
     .lt-bible.mode-lt .jo-body {
       position: relative;
       z-index: 3;
@@ -389,7 +389,7 @@
       padding-left: clamp(24px, 2vw, 40px);
       padding-right: clamp(24px, 2vw, 40px);
     }
-    
+
     .lt-bible.mode-lt .jo-ref-line {
       position: relative;
       z-index: 4;
@@ -413,7 +413,7 @@
       padding: 25px 15px 25px 60px;
       align-items: center;
     }
-    
+
     .lt-bible.mode-custom #text-container {
       display: block !important;
       position: absolute !important;
@@ -427,7 +427,7 @@
       margin: 0 !important;
       text-align: left !important;
     }
-    
+
     .lt-bible.mode-custom #custom-lt-ref-box {
       display: flex;
       bottom: calc(100% + 10px);
@@ -435,7 +435,7 @@
       z-index: 4;
       min-width: 240px;
     }
-    
+
     .lt-bible.mode-custom .jo-body {
       padding-left: 0 !important;
       width: 100%;
@@ -450,12 +450,12 @@
       padding: 20px 10%;
       box-sizing: border-box;
     }
-    
+
     .lt-song.mode-lt #lt-bg-wrap {
       bottom: 0;
       opacity: 1;
     }
-    
+
     .lt-song.mode-lt .jo-body {
       text-align: center;
       width: 100%;
@@ -474,12 +474,12 @@
       height: 100%;
       text-align: center;
     }
-    
+
     .mode-full .jo-body {
       text-align: center;
       width: 100%;
     }
-    
+
     .mode-full .jo-ref-line {
       text-align: center;
       margin-bottom: 20px;
@@ -493,32 +493,32 @@
       animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       will-change: opacity, transform, clip-path;
     }
-    
+
     .anim-fade { animation-name: fadeIn; }
     .anim-zoom { animation-name: zoomIn; }
     .anim-write { animation-name: writeOn; }
-    
+
     .type-line {
       display: block;
     }
-    
+
     .type-word {
       display: inline-block;
       white-space: pre;
       opacity: 0;
       transition: opacity 0.25s ease;
     }
-    
+
     .hidden-word {
       visibility: hidden;
       opacity: 0;
     }
-    
+
     .revealed-word {
       visibility: visible;
       opacity: 1;
     }
-    
+
     .custom-main-text,
     .custom-ref-text,
     .custom-version-text {
@@ -535,46 +535,46 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    
+
     @keyframes zoomIn {
-      from { 
+      from {
         opacity: 0;
         transform: scale(0.95);
       }
-      to { 
+      to {
         opacity: 1;
         transform: scale(1);
       }
     }
-    
+
     @keyframes writeOn {
-      from { 
+      from {
         opacity: 0;
         clip-path: inset(0 100% 0 0);
       }
-      to { 
+      to {
         opacity: 1;
         clip-path: inset(0 0 0 0);
       }
     }
-    
+
     @keyframes slideUp {
-      from { 
+      from {
         opacity: 0;
         transform: translateY(20px);
       }
-      to { 
+      to {
         opacity: 1;
         transform: translateY(0);
       }
     }
-    
+
     @keyframes scaleIn {
-      from { 
+      from {
         opacity: 0;
         transform: scale(0.95);
       }
-      to { 
+      to {
         opacity: 1;
         transform: scale(1);
       }
@@ -587,28 +587,28 @@
         padding: 10px 20px;
         min-width: 180px;
       }
-      
+
       #custom-lt-main-bar {
         font-size: 32px;
         min-height: 180px;
         padding: 15px 0 15px 40px;
       }
-      
+
       .lt-bible.mode-lt #text-container {
         padding: 15px 40px;
       }
-      
+
       .lt-bible.mode-custom #text-container {
         left: 40px !important;
         right: 40px !important;
         bottom: 20px !important;
       }
-      
+
       .lt-bible.mode-custom #custom-lt-main-bar {
         padding: 20px 10px 20px 40px;
         min-height: 100px;
       }
-      
+
       .lt-bible.mode-custom #custom-lt-ref-box {
         left: 40px;
       }
@@ -621,7 +621,7 @@
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
       }
-      
+
       .jo-verse-sup {
         -webkit-font-smoothing: subpixel-antialiased;
       }
@@ -758,7 +758,7 @@
       heightVh: null,
       anchor: 'bottom'
     };
-    
+
     // Current display state
     let currentState = {
       mode: 'full',
@@ -767,7 +767,7 @@
       styleData: null,
       isLive: false
     };
-    
+
     // Performance optimization
     let rafId = null;
     let lastUpdateTime = 0;
@@ -784,7 +784,7 @@
     const MIN_SONG_LT_NO_BG_TOP_PAD_PX = 24;
     // Debug mode controlled by URL param `?debug=1` or `?debug`
     const DEBUG_MODE = new URLSearchParams(window.location.search).has('debug');
-    
+
     // DOM Elements
     const elements = {
       txt: document.getElementById('text-container'),
@@ -807,6 +807,34 @@
       customRefText: null,
       customVersionText: null
     };
+
+    // Ensure native loop works reliably: some sources/browsers may not honor loop for certain URLs.
+    try {
+      if (elements.bgVideo) {
+        elements.bgVideo.addEventListener('ended', function () {
+          try {
+            const ctrl = getSeamlessLoopController(elements.bgVideo);
+            if ((!ctrl || !ctrl.enabled) && elements.bgVideo.loop && elements.bgVideo.src) {
+              try { elements.bgVideo.currentTime = 0; } catch (_) {}
+              elements.bgVideo.play().catch(() => {});
+            }
+          } catch (_) {}
+        });
+      }
+    } catch (_) {}
+    try {
+      if (elements.ltVideo) {
+        elements.ltVideo.addEventListener('ended', function () {
+          try {
+            const ctrl = getSeamlessLoopController(elements.ltVideo);
+            if ((!ctrl || !ctrl.enabled) && elements.ltVideo.loop && elements.ltVideo.src) {
+              try { elements.ltVideo.currentTime = 0; } catch (_) {}
+              elements.ltVideo.play().catch(() => {});
+            }
+          } catch (_) {}
+        });
+      }
+    } catch (_) {}
 
     // Simple on-screen debug logger (temporary)
     function debug(msg, isError = false) {
@@ -886,18 +914,18 @@
         syncFromMirror(false);
       }, 800);
     }
-    
+
     // ===== SYNC (BroadcastChannel) =====
     // Initialize
     function init() {
       // Set up CSS custom properties for smooth transitions
       document.documentElement.style.setProperty('--transition-timing', 'cubic-bezier(0.4, 0, 0.2, 1)');
-      
+
       // Set initial opacity to 0 for fade-in effect
       elements.txt.style.opacity = '0';
       elements.bg.style.opacity = '0';
       elements.ltWrap.style.opacity = '0';
-      
+
       // Reveal debug overlay and report init
       const dbg = document.getElementById('debug-overlay');
       if (dbg) dbg.style.display = DEBUG_MODE ? 'block' : 'none';
@@ -921,7 +949,7 @@
         relaySend({ type: 'HELLO', proto: 1, sender: 'display', ts: Date.now() });
         syncFromMirror(false);
       }, 2000);
-      
+
       // Self-test: only run in debug mode
       if (DEBUG_MODE) {
         setTimeout(() => {
@@ -934,7 +962,7 @@
 
       console.log('Scripture Pod Pro Display initialized');
     }
-    
+
     // Handle incoming messages
     function acceptSeq(seq) {
       if (!seq) return true;
@@ -1062,7 +1090,7 @@
         handleInboundMessage(e.data || {}, 'bc');
       };
     }
-    
+
     function computeLtHeight(d) {
       let ltHeight = Number(d.ltBgHeightPct || 20);
       if (d.autoAdjustLtHeight) {
@@ -1251,7 +1279,7 @@
       elements.ltInner.style.transformOrigin = isTop ? 'center top' : 'center bottom';
       elements.ltCrossfade.style.transformOrigin = isTop ? 'center top' : 'center bottom';
     }
-    
+
     function registerIncomingFonts(fonts) {
       (fonts || []).forEach(f => {
         if (!f || !f.name || !f.dataUrl || loadedFonts.has(f.name)) return;
@@ -1397,7 +1425,7 @@
 
       return { fontFamily: preferred || "'Montserrat', sans-serif", direction: d.direction || 'ltr', textAlign: d.textAlign || 'center' };
     }
-    
+
     function clearTypeTimers() {
       if (typeAnim.rafId) {
         cancelAnimationFrame(typeAnim.rafId);
@@ -1413,13 +1441,13 @@
       }
       clearToken += 1;
     }
-    
+
     function buildTypedLine(htmlLine) {
       const temp = document.createElement('div');
       temp.innerHTML = htmlLine || '';
       const lineEl = document.createElement('div');
       lineEl.className = 'type-line';
-      
+
       const processNode = (node, parent) => {
         if (node.nodeType === Node.TEXT_NODE) {
           const parts = node.textContent.split(/(\s+)/);
@@ -1440,7 +1468,7 @@
           node.childNodes.forEach(child => processNode(child, clone));
         }
       };
-      
+
       temp.childNodes.forEach(child => processNode(child, lineEl));
       return lineEl;
     }
@@ -1507,42 +1535,42 @@
         }
       });
     }
-    
+
     function applyTypeOn(d, mode, isBible) {
       const standardTarget = elements.txt.querySelector('.text-anim-content');
       const target = (mode === 'custom') ? elements.customMainBar : (standardTarget || elements.txt);
       const customBgWasActive = (!animateBgTransitions && mode === 'custom');
       const effectiveTarget = (mode === 'custom' && customBgWasActive && elements.customMainText) ? elements.customMainText : target;
       if (!target) return;
-      
+
       const textKey = d.text || '';
       const sameText = typeAnim.textKey === textKey && typeAnim.startTime > 0;
       const now = performance.now();
       const durationSec = clamp(Number(d.transitionDuration || 1), 0.1, 10);
       const durationMs = durationSec * 1000;
       const startTime = sameText ? typeAnim.startTime : now;
-      
+
       clearTypeTimers();
-      
+
       const rawHtml = d.text || '';
       const lines = rawHtml.replace(/<br\s*\/?>/gi, '\n').split('\n');
       effectiveTarget.innerHTML = '';
-      
+
       lines.forEach((line) => {
         const lineEl = buildTypedLine(line);
         lineEl.style.margin = '0';
         lineEl.style.lineHeight = 'inherit';
         effectiveTarget.appendChild(lineEl);
       });
-      
+
       const words = Array.from(effectiveTarget.querySelectorAll('.type-word'));
       if (!words.length) return;
-      
+
       typeAnim.textKey = textKey;
       typeAnim.startTime = startTime;
       typeAnim.duration = durationMs;
       typeAnim.words = words;
-      
+
       const step = () => {
         const elapsed = Math.max(0, performance.now() - typeAnim.startTime);
         const progress = Math.min(1, elapsed / typeAnim.duration);
@@ -1562,7 +1590,7 @@
           typeAnim.rafId = null;
         }
       };
-      
+
       // Apply initial visibility based on elapsed when re-rendering
       const initialElapsed = Math.max(0, now - startTime);
       const initialProgress = Math.min(1, initialElapsed / durationMs);
@@ -1573,10 +1601,10 @@
           w.classList.add('revealed-word');
         }
       });
-      
+
       typeAnim.rafId = requestAnimationFrame(step);
     }
-    
+
     // ===== ANIMATIONS =====
     function applyTransitionEffects(d, mode, isBible) {
       const t = (d.transitionType || 'fade').toLowerCase();
@@ -1584,7 +1612,7 @@
       const isZoomType = (t === 'zoom-type');
       const usesType = (t === 'type' || isZoomType);
       const zoomDuration = isZoomType ? baseDuration + 0.3 : baseDuration; // slight hold after typing finishes
-      
+
       if (usesType) {
         applyTypeOn(d, mode, isBible);
         if (t === 'type') {
@@ -1614,7 +1642,7 @@
       } else {
         clearTypeTimers();
       }
-      
+
       const textKey = d.text || '';
       const now = performance.now();
       const sameTransition = transitionState.textKey === textKey && transitionState.type === t && transitionState.duration === zoomDuration && transitionState.startTime > 0;
@@ -1648,7 +1676,7 @@
           else if (mode === 'lt') bgTargets.push(elements.ltWrap);
         }
       }
-      
+
       const applyAnim = (el) => {
         if (!el) return;
         el.classList.remove('transition-anim', 'anim-fade', 'anim-zoom', 'anim-write');
@@ -1659,7 +1687,7 @@
         el.style.animationDelay = `${-elapsedSec}s`;
         el.classList.add('transition-anim', animClass);
       };
-      
+
       targets.forEach(applyAnim);
       textTargets.forEach(applyAnim);
       // Background targets always use fade-only to avoid transform/clip-path displacement
@@ -1677,14 +1705,14 @@
         }, { once: true });
       });
     }
-    
+
     // ===== RENDERER =====
     // Handle update with proper sequencing
     function handleUpdate(d) {
       cancelPendingClear();
       // Store current state
       currentState = { ...currentState, ...d };
-      
+
       const mode = (d.mode === 'full') ? 'full' : (d.mode === 'custom' ? 'custom' : 'lt');
       const isBible = !!d.isBible;
       const useCustomStyle = (mode === 'custom');
@@ -1693,11 +1721,11 @@
       animateBgTransitions = d.animateBgTransitions !== false;
       registerIncomingFonts(d.customFonts);
       prevBgState = { full: bgActivePrev, lt: ltBgActivePrev, custom: customBgActivePrev };
-      
+
       // Update container classes
       elements.cont.className = `mode-${mode} ${isBible ? 'lt-bible' : 'lt-song'} lt-anchor-${ltAnchorMode} hardware-accelerated`;
       applyLtAnchorMode(ltAnchorMode);
-      
+
       // Ensure LT layers are fully hidden in custom mode
       if (mode === 'custom') {
         elements.ltWrap.style.opacity = '0';
@@ -1716,7 +1744,7 @@
         elements.txt.style.padding = `0 ${Math.max(0, Number(currentState.padLRFull ?? currentState.padLR ?? 5))}%`;
         elements.txt.style.display = 'none';
       }
-      
+
       // Set text content based on mode
       if (mode === 'custom') {
         elements.txt.innerHTML = '';
@@ -1730,17 +1758,17 @@
       }
       elements.txt.style.color = d.textColor || '#ffffff';
       elements.txt.style.fontWeight = d.fontWeight || '700';
-      
+
       // Handle different modes
       if (mode === 'custom' && useCustomStyle) {
         handleCustomMode(d, isBible);
       } else {
         handleStandardMode(d, mode, isBible);
       }
-      
+
       // Handle background
       handleBackground(d, mode, isBible);
-      
+
       // Apply configured transition
       applyTransitionEffects(d, mode, isBible);
 
@@ -1759,13 +1787,13 @@
         console.error('Font diagnostic logging failed', e);
       }
     }
-    
+
     // Handle custom mode (professional styles)
     function handleCustomMode(d, isBible) {
       const styleData = d.styleData || {};
       const textX = Number(d.textX || 0);
       const textY = Number(d.textY || 860);
-      
+
       // Hide standard elements
       elements.txt.style.opacity = '0';
       elements.txt.style.display = 'none';
@@ -1777,7 +1805,7 @@
       elements.ltInner.style.backgroundColor = 'transparent';
       elements.bg.style.opacity = '0';
       elements.bg.style.backgroundImage = 'none';
-      
+
       // Show custom elements
       elements.customRefBox.style.display = 'flex';
       elements.customMainBar.style.display = 'flex';
@@ -1785,7 +1813,7 @@
       elements.customRefBox.style.opacity = '1';
       elements.customMainBar.style.opacity = '1';
       if (elements.customVersionBar) elements.customVersionBar.style.opacity = '1';
-      
+
       // Set reference box content
       if (isBible) {
         const refText = d.bibleRef || '';
@@ -1817,17 +1845,17 @@
       }
       elements.customRefText = document.getElementById('custom-ref-text');
       elements.customVersionText = document.getElementById('custom-version-text');
-      
+
       // Set main bar content
       elements.customMainBar.innerHTML = `<div id="custom-main-text" class="custom-main-text">${d.text || ''}</div>`;
       elements.customMainText = document.getElementById('custom-main-text');
-      
+
       // Apply style data
       applyCustomStyle(d, styleData, textX, textY, isBible, { useVersionBar: !!elements.customVersionBarUse });
-      
+
       // Special handling for Bible custom mode not needed; custom elements carry the content
     }
-    
+
     function normalizeOpacity(value, fallback = 1) {
       const num = Number(value);
       if (!Number.isFinite(num)) return fallback;
@@ -1906,7 +1934,7 @@
       const refTextColor = textRef.color || '#ffffff';
       const refOpacity = normalizeOpacity(refBox.opacity, 0.95);
       const viewportWidth = Math.max(window.innerWidth || 1920, 1);
-      
+
       // Reference box styling
       const refTextSample = (elements.customRefText ? elements.customRefText.textContent : (d.bibleRef || d.text || ''));
       const refFont = chooseFontAndDirection({ fontFamily: textRef.fontFamily || d.fontFamily }, refTextSample);
@@ -2115,7 +2143,7 @@
       } else if (elements.customVersionBar) {
         elements.customVersionBar.style.display = 'none';
       }
-      
+
       // Main bar styling
       const mainTextSample = d.text || (elements.customMainText ? elements.customMainText.textContent : '');
       const mainFont = chooseFontAndDirection({ fontFamily: textMain.fontFamily || d.fontFamily }, mainTextSample);
@@ -2175,7 +2203,7 @@
         elements.customMainBar.style.minHeight = '0px';
         return;
       }
-      
+
       const barOpacity = normalizeOpacity(mainBar.opacity, 0.95);
       const barFillType = mainBar.fillType || (mainBar.gradientStart || mainBar.gradientEnd ? 'gradient' : 'color');
       const gradStart = mainBar.gradientStart || mainBar.bgColor || '#005E29';
@@ -2191,7 +2219,7 @@
       elements.customMainBar.style.borderWidth = `${mainBar.borderWidth || 0}px`;
       elements.customMainBar.style.borderRadius = `${mainBar.borderRadius || 0}px`;
       elements.customMainBar.style.borderStyle = 'solid';
-      
+
       // Shadow
       const mainShadow = textMain.shadow || shadow || {};
       const shadowColor = mainShadow.color || '#000000';
@@ -2203,7 +2231,7 @@
       if (elements.customMainText) {
         elements.customMainText.style.textShadow = elements.customMainBar.style.textShadow;
       }
-      
+
       const baseHeight = (mainBar.height != null ? mainBar.height : (mainBar.minHeight || 220));
       elements.customMainBar.style.minHeight = '0px';
       elements.customMainBar.style.height = baseHeight + 'px';
@@ -2225,7 +2253,7 @@
           elements.customMainText.style.height = '';
         }
       }
-      
+
       // Background image for main bar
       if (d.bgEnabled && d.bgType === 'image' && d.bgImage) {
         elements.customMainBar.style.backgroundImage = `url(${d.bgImage})`;
@@ -2234,14 +2262,14 @@
         elements.customMainBar.style.backgroundBlendMode = 'overlay';
       }
     }
-    
+
     // Handle standard mode (non-custom)
     function handleStandardMode(d, mode, isBible) {
       // Hide custom elements
       elements.customRefBox.style.display = 'none';
       if (elements.customVersionBar) elements.customVersionBar.style.display = 'none';
       elements.customMainBar.style.display = 'none';
-      
+
       // Show text container
       elements.txt.style.opacity = '1';
       if (mode !== 'lt') {
@@ -2250,7 +2278,7 @@
         elements.ltWrap.style.bottom = '0';
         elements.ltWrap.style.top = 'auto';
       }
-      
+
       // Set font properties
       const stdFont = chooseFontAndDirection(d, d.text);
       if (stdFont.googleFamily) {
@@ -2269,7 +2297,7 @@
         ? (!isBible ? (d.fullTextTransform || 'none') : 'none')
         : (!isBible ? (d.ltTextTransform || 'none') : 'none');
       elements.txt.style.textTransform = effectiveTextTransform;
-      
+
       if (mode === 'full') {
         // Full screen mode aligned by settings
         const hAlign = d.hAlignFull || 'center';
@@ -2687,7 +2715,7 @@
         if (loopController) stopSeamlessLoop(loopController, { clearSrc: false, resetActiveToPrimary: true });
       }
     }
-    
+
     // Handle background with proper positioning for Bible LT mode
     // ===== BACKGROUND =====
     function handleBackground(d, mode, isBible) {
@@ -2711,7 +2739,7 @@
       const suppressBgTransition = (!animateBgTransitions) && (isFade ? (bgActivePrev && bgCurrentlyActive) : true);
       const suppressLtTransition = (!animateBgTransitions) && (isFade ? (ltBgActivePrev && ltCurrentlyActive) : true);
       const suppressCustomBgTransition = (!animateBgTransitions) && (isFade ? (prevBgState.custom && customCurrentlyActive) : true);
-      
+
       const requestedBgMode = (typeof d.bgMode === 'string') ? d.bgMode : 'solid';
       const bgModeChanged = requestedBgMode !== lastBGMode;
       const requestedBgType = d.bgType || 'color';
@@ -2740,13 +2768,13 @@
       elements.bgCrossfade.style.backgroundPosition = `center ${bgPositionY}`;
       if (elements.ltVideo) elements.ltVideo.style.objectPosition = `center ${bgPositionY}`;
       if (elements.bgVideo) elements.bgVideo.style.objectPosition = `center ${bgPositionY}`;
-      
+
       if (mode === 'lt' || mode === 'custom') {
         applyTransitionState(elements.bg, suppressBgTransition);
         elements.bg.style.opacity = '0';
         syncVideoState(elements.bgVideo, bgVideoSrc, false, videoSettings);
         syncYoutubeState(elements.bgYoutube, elements.bgYoutubeFrame, bgYoutubeSrc, false);
-        
+
         if (mode === 'lt') {
           const ltAnchorMode = getLtAnchorMode(d);
           const isTopAnchor = ltAnchorMode === 'top';
@@ -2767,7 +2795,7 @@
           const ltBgModeChanged = ltBgModeRequested !== lastLtBgMode;
           const ltBgTypeRequested = d.bgType || 'color';
           const ltBgTypeChanged = ltBgTypeRequested !== lastLtBgType;
-          
+
           if (isBible) {
             applyBibleLtLayout(d, ltHeight, ltAnchorMode);
           } else {
@@ -2780,14 +2808,14 @@
           }
           elements.txt.style.zIndex = '4';
           elements.ltWrap.style.zIndex = '-2';
-          
+
           // Apply background effects
           if (d.bgEnabled) {
             elements.ltWrap.style.opacity = bgOpacity;
             elements.ltInner.style.filter = `blur(${blurPx}px)`;
             syncVideoState(elements.ltVideo, bgVideoSrc, (d.bgType === 'video' && !!bgVideoSrc), { ...videoSettings, fadeOut: (lastLtBgType === 'video' && d.bgType !== 'video'), revealOpacity: bgOpacity });
             syncYoutubeState(elements.ltYoutube, elements.ltYoutubeFrame, bgYoutubeSrc, (d.bgType === 'video' && !!bgYoutubeSrc));
-            
+
             const applyLtBackground = () => {
               if (bgVideoSrc) {
                 elements.ltInner.style.backgroundImage = 'none';
@@ -2932,7 +2960,7 @@
         elements.customRefBox.style.display = 'none';
         if (elements.customVersionBar) elements.customVersionBar.style.display = 'none';
         elements.customMainBar.style.display = 'none';
-        
+
         if (d.bgEnabled) {
           elements.bg.style.filter = `blur(${blurPx}px)`;
           syncVideoState(elements.bgVideo, bgVideoSrc, (d.bgType === 'video' && !!bgVideoSrc), { ...videoSettings, fadeOut: (lastBgType === 'video' && d.bgType !== 'video'), revealOpacity: bgOpacity });
@@ -3062,7 +3090,7 @@
           syncYoutubeState(elements.bgYoutube, elements.bgYoutubeFrame, bgYoutubeSrc, false);
         }
       }
-      
+
       // Force reflow to ensure proper rendering
       lastBGMode = requestedBgMode;
       lastBgType = requestedBgType;
@@ -3107,12 +3135,12 @@
           elements.bg.style.opacity = bgOpacity;
         }
       });
-      
+
       bgActivePrev = bgCurrentlyActive;
       ltBgActivePrev = ltCurrentlyActive;
       customBgActivePrev = (mode === 'custom' && d.bgEnabled);
     }
-    
+
     // Clear display
     function finalizeClear() {
       if (clearTimer) {
@@ -3141,7 +3169,7 @@
       transitionState.type = null;
       transitionState.startTime = 0;
       transitionState.duration = 0;
-      
+
       currentState = {
         mode: 'full',
         isBible: false,
@@ -3180,7 +3208,7 @@
         finalizeClear();
       }, Math.round(durationSec * 1000));
     }
-    
+
     // Calculate optimal font size for Bible LT mode
     function calculateBibleFontSize(lineCount, baseSize) {
       if (lineCount <= 2) return baseSize;
@@ -3188,7 +3216,7 @@
       if (lineCount === 4) return Math.max(baseSize * 0.75, 20);
       return Math.max(baseSize * 0.65, 18);
     }
-    
+
     // Handle window resize
     function handleResize() {
       resizeYoutubeFrames();
@@ -3197,12 +3225,12 @@
         const textX = Number(currentState.textX || 0);
         const textY = Number(currentState.textY || 860);
         const padLR = Math.max(0, Math.min(20, Number(currentState.padLR ?? 0)));
-        
+
         elements.txt.style.left = (textX + (padLR * 0.01 * window.innerWidth / 100)) + 'px';
         elements.txt.style.right = (padLR * 0.01 * window.innerWidth / 100) + 'px';
       }
     }
-    
+
     // ===== INIT =====
     function bindDisplayEventsOnce() {
       if (window.__bspDisplayEventsBound) return;
@@ -3233,7 +3261,7 @@
     }
 
     window.addEventListener('load', initDisplay);
-    
+
     // Export for debugging
     window.displayDebug = {
       currentState,
@@ -3241,7 +3269,7 @@
       clearDisplay,
       updateSettings: handleUpdate
     };
-    
+
     console.log('Scripture Pod Pro Display loaded successfully');
 
   </script>

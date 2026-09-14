@@ -345,6 +345,18 @@
       const channel = IS_PREVIEW ? null : new BroadcastChannel(CHANNEL_NAME);
       const bg = document.getElementById('bg');
       const bgVideo = document.getElementById('bg-video');
+      // Ensure loop behavior works reliably across sources/browsers
+      try {
+        bgVideo.addEventListener('ended', function () {
+          try {
+            // Only attempt to restart when loop is enabled and a src exists
+            if (bgVideo.loop && bgVideo.src) {
+              try { bgVideo.currentTime = 0; } catch (_) {}
+              bgVideo.play().catch(function () {});
+            }
+          } catch (_) {}
+        });
+      } catch (_) {}
       const sceneCompositor = document.getElementById('scene-compositor');
       const stage = document.getElementById('stage');
       const ltWrap = document.getElementById('lt-wrap');
