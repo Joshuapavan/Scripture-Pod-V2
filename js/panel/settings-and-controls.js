@@ -852,6 +852,16 @@
         scheduleLiveUpdate();
       }
       updateButtonView();
+      // Immediately notify displays about background video loop/speed changes
+      try {
+        const bgLoopEl = document.getElementById('bg-video-loop');
+        const bgSpeedEl = document.getElementById('bg-video-speed');
+        if (bgLoopEl) {
+          try {
+            postUpdate({ bgVideoLoop: !!bgLoopEl.checked, bgVideoSpeed: bgSpeedEl ? Number(bgSpeedEl.value || 1) : 1 });
+          } catch (e) { /* non-fatal */ }
+        }
+      } catch (e) {}
       // Update gradient angle live if GB is enabled
       const bgType = document.getElementById('bg-type')?.value;
       if (bgType === 'gradient') {

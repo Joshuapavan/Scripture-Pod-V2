@@ -73,7 +73,7 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
-    "electron": "^31.7.7",
-    "electron-builder": "^24.13.3"
+    "electron": "^42.4.0",
+    "electron-builder": "^26.15.3"
   }
 }
