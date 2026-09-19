@@ -1593,7 +1593,7 @@
       const textKey = d.text || '';
       const sameText = typeAnim.textKey === textKey && typeAnim.startTime > 0;
       const now = performance.now();
-      const durationSec = clamp(Number(d.transitionDuration || 0.2), 0.1, 10);
+      const durationSec = clamp(Number(d.transitionDuration || 1), 0.1, 10);
       const durationMs = durationSec * 1000;
       const startTime = sameText ? typeAnim.startTime : now;
 
@@ -1655,7 +1655,7 @@
     // ===== ANIMATIONS =====
     function applyTransitionEffects(d, mode, isBible) {
       const t = (d.transitionType || 'fade').toLowerCase();
-      const baseDuration = clamp(Number(d.transitionDuration || 0.2), 0.1, 10);
+      const baseDuration = clamp(Number(d.transitionDuration || 0.8), 0.1, 10);
       const isZoomType = (t === 'zoom-type');
       const usesType = (t === 'type' || isZoomType);
       const zoomDuration = isZoomType ? baseDuration + 0.3 : baseDuration; // slight hold after typing finishes
@@ -2566,7 +2566,8 @@
         swapping: false,
         enabled: false,
         src: '',
-        playbackRate: 1
+        playbackRate: 1,
+        revealOpacity: 1
       };
       seamlessLoopControllers.set(primaryEl, controller);
       return controller;
@@ -2615,7 +2616,7 @@
               const p = inactive.play();
               if (p && p.catch) p.catch(() => {});
               requestAnimationFrame(() => {
-                inactive.style.opacity = `${revealOpacity}`;
+                inactive.style.opacity = `${controller.revealOpacity}`;
                 active.style.opacity = '0';
               });
               setTimeout(() => {
@@ -2666,6 +2667,7 @@
       videoEl.playbackRate = playbackRate;
       if (loopController) {
         loopController.playbackRate = playbackRate;
+        loopController.revealOpacity = revealOpacity;
       }
 
       if (show && loop && loopController) {

@@ -16177,7 +16177,7 @@
             -webkit-user-select: text;
           }
         </style>
-        <script src="js/panel/annotate-tools.js"></script>
+        <script src="../js/panel/annotate-tools.js"></script>
         <button class="btn toolbar-icon-btn" id="btn-settings" onclick="openModal('settingsModal')" title="Settings" data-i18n-title="common_settings"><svg width="16" height="16" viewBox="1 1 22 22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       </div>
       <div id="preset-popover" class="preset-popover">
@@ -16196,9 +16196,9 @@
         <div class="slider-container">
           <div class="slider-header">
             <label class="settings-label" data-i18n="common_duration">Duration</label>
-            <span class="slider-value" id="song-transition-duration-value">0.2s</span>
+            <span class="slider-value" id="song-transition-duration-value">1.0s</span>
           </div>
-          <input type="range" id="song-transition-duration" min="0.2" max="5" step="0.1" value="0.2" class="settings-slider" oninput="updateSliderValue(this,'s');onAnyControlChange()">
+          <input type="range" id="song-transition-duration" min="0.2" max="5" step="0.1" value="0.8" class="settings-slider" oninput="updateSliderValue(this,'s');onAnyControlChange()">
         </div>
         <div style="margin-top:10px">
           <label class="mini-toggle" style="width:100%;justify-content:space-between">
@@ -17926,7 +17926,7 @@
               <textarea id="feedback-message" class="feedback-textarea" placeholder="Describe your problem or suggestion here..."></textarea>
               <div class="feedback-note">
                 <span>Your feedback will be sent to our feedback backend and posted publicly on our</span>
-                <a href="https://github.com/Johnbatey/bible-song-pro-obs/issues" target="_blank" rel="noreferrer">GitHub issues</a>
+                <a href="https://github.com/Joshuapavan/Scripture-Pod-V2/issues" target="_blank" rel="noreferrer">GitHub issues</a>
               </div>
               <div id="feedback-status" class="feedback-status"></div>
               <div class="feedback-actions">
@@ -19103,26 +19103,26 @@
       } catch (_) {}
     })();
   </script>
-  <script src="js/panel/state-and-storage.js"></script>
-  <script src="js/panel/panel-app-core.js"></script>
-  <script src="js/panel/reference-localization-theme.js"></script>
-  <script src="js/panel/vmix-and-translation.js"></script>
-  <script src="js/panel/songs-and-bible.js"></script>
-  <script src="js/panel/render-and-selection.js"></script>
-  <script src="js/panel/media-and-background.js"></script>
-  <script src="js/panel/output-and-streaming.js"></script>
-  <script src="js/panel/remote-show-tools.js"></script>
-  <script src="js/panel/scene-and-source-tools.js"></script>
-  <script src="js/panel/fx-and-source-config.js"></script>
-  <script src="js/panel/source-runtime-and-promixer.js"></script>
-  <script src="js/panel/program-display-and-transform.js"></script>
-  <script src="js/panel/recording-and-livestream-tools.js"></script>
-  <script src="js/panel/workspace-and-editor-tools.js"></script>
-  <script src="js/panel/app-commands-and-shortcuts.js"></script>
-  <script src="js/panel/settings-and-controls.js"></script>
-  <script src="js/panel/sidebar-and-workspace.js"></script>
-  <script src="js/panel/sync-and-output.js"></script>
-  <script src="js/panel/bootstrap-and-init.js"></script>
+  <script src="../js/panel/state-and-storage.js"></script>
+  <script src="../js/panel/panel-app-core.js"></script>
+  <script src="../js/panel/reference-localization-theme.js"></script>
+  <script src="../js/panel/vmix-and-translation.js"></script>
+  <script src="../js/panel/songs-and-bible.js"></script>
+  <script src="../js/panel/render-and-selection.js"></script>
+  <script src="../js/panel/media-and-background.js"></script>
+  <script src="../js/panel/output-and-streaming.js"></script>
+  <script src="../js/panel/remote-show-tools.js"></script>
+  <script src="../js/panel/scene-and-source-tools.js"></script>
+  <script src="../js/panel/fx-and-source-config.js"></script>
+  <script src="../js/panel/source-runtime-and-promixer.js"></script>
+  <script src="../js/panel/program-display-and-transform.js"></script>
+  <script src="../js/panel/recording-and-livestream-tools.js"></script>
+  <script src="../js/panel/workspace-and-editor-tools.js"></script>
+  <script src="../js/panel/app-commands-and-shortcuts.js"></script>
+  <script src="../js/panel/settings-and-controls.js"></script>
+  <script src="../js/panel/sidebar-and-workspace.js"></script>
+  <script src="../js/panel/sync-and-output.js"></script>
+  <script src="../js/panel/bootstrap-and-init.js"></script>
   <script>
     (() => {
       const gapInput = document.getElementById('dual-version-gap');
@@ -19273,22 +19273,6 @@
           }, 0);
         }
       }, true);
-      document.addEventListener('input', (event) => {
-        if (!event.target.closest('#settingsModal')) return;
-        setTimeout(() => {
-          if (typeof isLive !== 'undefined' && isLive && typeof livePointer !== 'undefined' && livePointer && typeof pushLiveUpdate === 'function') {
-            pushLiveUpdate();
-          }
-        }, 0);
-      }, true);
-      document.addEventListener('change', (event) => {
-        if (!event.target.closest('#settingsModal')) return;
-        setTimeout(() => {
-          if (typeof isLive !== 'undefined' && isLive && typeof livePointer !== 'undefined' && livePointer && typeof pushLiveUpdate === 'function') {
-            pushLiveUpdate();
-          }
-        }, 0);
-      }, true);
     })();
   </script>
   <style id="obs-isolated-mode-style">
@@ -19406,6 +19390,6 @@
       flex-shrink: 0 !important;
     }
   </style>
-  <script src="js/panel/obs-isolated-layout.js"></script>
+  <script src="../js/panel/obs-isolated-layout.js"></script>
 </body>
 </html>
