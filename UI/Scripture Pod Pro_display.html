@@ -637,7 +637,7 @@
 </head>
 <body>
   <div id="bg-layer" class="hardware-accelerated">
-    <video id="bg-video" class="bg-video" muted playsinline loop></video>
+    <video id="bg-video" class="bg-video" muted playsinline loop preload="auto"></video>
     <div id="bg-youtube" class="bg-youtube">
       <iframe id="bg-youtube-frame" title="Background YouTube" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"></iframe>
     </div>
@@ -645,7 +645,7 @@
   <div id="bg-layer-crossfade"></div>
   <div id="lt-bg-wrap" class="hardware-accelerated">
     <div id="lt-bg-inner" class="hardware-accelerated">
-      <video id="lt-bg-video" class="bg-video" muted playsinline loop></video>
+      <video id="lt-bg-video" class="bg-video" muted playsinline loop preload="auto"></video>
       <div id="lt-bg-youtube" class="bg-youtube">
         <iframe id="lt-bg-youtube-frame" title="Lower Third YouTube" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"></iframe>
       </div>
@@ -779,6 +779,12 @@
     // Store last background styles for crossfade dissolves
     let lastFullBgStyle = { backgroundImage: 'none', backgroundColor: 'black' };
     let lastLtBgStyle = { backgroundImage: 'none', backgroundColor: 'black' };
+    const bgImageStyleCache = new WeakMap();
+    function setCachedBgImage(element, value) {
+      if (bgImageStyleCache.get(element) === value) return;
+      bgImageStyleCache.set(element, value);
+      element.style.backgroundImage = value;
+    }
     const UPDATE_THROTTLE = 16; // ~60fps
     const MIN_SONG_LT_NO_BG_BOTTOM_PAD_PX = 40;
     const MIN_SONG_LT_NO_BG_TOP_PAD_PX = 24;
@@ -1089,6 +1095,26 @@
       debug(`MSG(${source}): ` + (d.type || 'unknown') + (d.text ? ' — ' + (String(d.text).slice(0,80)) : ''));
       try {
         switch (d.type) {
+          case 'PRELOAD_BACKGROUND': {
+            const videoEl = elements.bgVideo;
+            const src = d.bgVideo || '';
+            if (src) {
+              currentState = {
+                ...currentState,
+                bgVideo: src,
+                bgVideoLoop: d.bgVideoLoop !== false,
+                bgVideoSpeed: d.bgVideoSpeed || 1
+              };
+            }
+            const isPlaying = videoEl && videoEl.style.display !== 'none' && !videoEl.paused;
+            if (src && !isGifSource(src) && !getYouTubeInfo(src) && videoEl && videoEl.dataset.src !== src && !isPlaying) {
+              syncVideoState(videoEl, src, false, {
+                loop: d.bgVideoLoop !== false,
+                playbackRate: d.bgVideoSpeed || 1
+              });
+            }
+            break;
+          }
           case 'PING': {
             const pong = { type: 'PONG' };
             if (source === 'relay') relaySend(pong);
@@ -1759,6 +1785,9 @@
       cancelPendingClear();
       // Store current state
       currentState = { ...currentState, ...d };
+      const backgroundUpdate = { ...d };
+      if (!Object.prototype.hasOwnProperty.call(d, 'bgImage')) backgroundUpdate.bgImage = currentState.bgImage;
+      if (!Object.prototype.hasOwnProperty.call(d, 'bgVideo')) backgroundUpdate.bgVideo = currentState.bgVideo;
 
       const mode = (d.mode === 'full') ? 'full' : (d.mode === 'custom' ? 'custom' : 'lt');
       const isBible = !!d.isBible;
@@ -1814,7 +1843,7 @@
       }
 
       // Handle background
-      handleBackground(d, mode, isBible);
+      handleBackground(backgroundUpdate, mode, isBible);
 
       // Apply configured transition
       applyTransitionEffects(d, mode, isBible);
@@ -1851,7 +1880,7 @@
       elements.ltInner.style.backgroundImage = 'none';
       elements.ltInner.style.backgroundColor = 'transparent';
       elements.bg.style.opacity = '0';
-      elements.bg.style.backgroundImage = 'none';
+      setCachedBgImage(elements.bg, 'none');
 
       // Show custom elements
       elements.customRefBox.style.display = 'flex';
@@ -3021,26 +3050,26 @@
 
           const applyFullBackground = () => {
             if (bgVideoSrc) {
-              elements.bg.style.backgroundImage = 'none';
+              setCachedBgImage(elements.bg, 'none');
               elements.bg.style.backgroundColor = 'transparent';
             } else if (bgGifSrc) {
-              elements.bg.style.backgroundImage = `url(${bgGifSrc})`;
+              setCachedBgImage(elements.bg, `url(${bgGifSrc})`);
               elements.bg.style.backgroundColor = 'transparent';
             } else if (bgYoutubeSrc) {
-              elements.bg.style.backgroundImage = 'none';
+              setCachedBgImage(elements.bg, 'none');
               elements.bg.style.backgroundColor = 'transparent';
             } else if (d.bgType === 'image' && d.bgImage) {
-              elements.bg.style.backgroundImage = `url(${d.bgImage})`;
+              setCachedBgImage(elements.bg, `url(${d.bgImage})`);
               elements.bg.style.backgroundColor = 'transparent';
             } else {
               const gradStart = d.bgGradientShadow || d.bgColor || 'black';
               const gradEnd = d.bgGradientHighlight || d.bgColor || 'black';
               if (d.bgMode === 'gradient') {
                 const angle = typeof d.bgGradientAngle !== 'undefined' ? d.bgGradientAngle : 90;
-                elements.bg.style.backgroundImage = `linear-gradient(${angle}deg, ${gradStart} 0%, ${gradEnd} 100%)`;
+                setCachedBgImage(elements.bg, `linear-gradient(${angle}deg, ${gradStart} 0%, ${gradEnd} 100%)`);
                 elements.bg.style.backgroundColor = gradStart;
               } else {
-                elements.bg.style.backgroundImage = 'none';
+                setCachedBgImage(elements.bg, 'none');
                 elements.bg.style.backgroundColor = d.bgColor || 'black';
               }
             }

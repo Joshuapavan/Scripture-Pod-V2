@@ -133,7 +133,7 @@
       document.getElementById('bgtype-image').classList.toggle('active', val === 'image');
       document.getElementById('bgtype-video').classList.toggle('active', val === 'video');
     }
-    
+
     function handleBgImageSourceChange() {
       const src = document.getElementById('bg-image-source').value;
       document.getElementById('bg-url-row').style.display = (src === 'url') ? 'block' : 'none';
@@ -144,8 +144,9 @@
       const src = document.getElementById('bg-video-source').value;
       document.getElementById('bg-video-url-row').style.display = (src === 'url') ? 'block' : 'none';
       document.getElementById('bg-video-upload-row').style.display = (src === 'upload') ? 'block' : 'none';
+      sendBackgroundVideoPreload();
     }
-    
+
     function handleBgUpload(input) {
       const file = input.files && input.files[0];
       if (!file) return;
@@ -168,6 +169,7 @@
       reader.onload = () => {
         bgVideoUploadDataUrl = reader.result;
         document.getElementById('bg-video-upload-hint').innerText = "Video selected ✓";
+        sendBackgroundVideoPreload();
         saveToStorageDebounced();
         onAnyControlChange();
         persistBackgroundState();
@@ -182,7 +184,7 @@
       el.value = '';
       onAnyControlChange();
     }
-    
+
     function calculateLtHeightPctFromLines(lineCount, referenceCount = 1) {
       const lines = Math.max(1, lineCount);
       const baseRefHeight = Math.max(1, referenceCount) * 46;
@@ -244,4 +246,4 @@
       }
       return calculateLtHeightPctFromLines(linesPerPage);
     }
-    
+

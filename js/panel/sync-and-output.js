@@ -56,6 +56,53 @@
       }, 3000);
     }
 
+    const RELAY_MEDIA_UNSET = Symbol('relay-media-unset');
+    let lastRelayBgImage = RELAY_MEDIA_UNSET;
+    let lastRelayBgVideo = RELAY_MEDIA_UNSET;
+    let backgroundVideoPreloadTimer = null;
+
+    function compactRelayMedia(message) {
+      if (message.type === 'PRELOAD_BACKGROUND') {
+        if (Object.prototype.hasOwnProperty.call(message, 'bgVideo')) lastRelayBgVideo = message.bgVideo;
+        return message;
+      }
+      if (message.type !== 'UPDATE') return message;
+      const compacted = { ...message };
+      ['bgImage', 'bgVideo'].forEach((key) => {
+        if (!Object.prototype.hasOwnProperty.call(message, key)) return;
+        const previous = key === 'bgImage' ? lastRelayBgImage : lastRelayBgVideo;
+        if (message[key] === previous) {
+          delete compacted[key];
+        } else if (key === 'bgImage') {
+          lastRelayBgImage = message[key];
+        } else {
+          lastRelayBgVideo = message[key];
+        }
+      });
+      return compacted;
+    }
+
+    function sendBackgroundVideoPreload() {
+      if (document.getElementById('bg-type')?.value !== 'video') return;
+      const source = document.getElementById('bg-video-source')?.value || 'upload';
+      const videoUrl = source === 'upload'
+        ? bgVideoUploadDataUrl
+        : String(document.getElementById('bg-video-url')?.value || '').trim();
+      if (!videoUrl) return;
+      if (lastLiveState?.kind === 'update' && lastLiveState.payload?.bgType === 'video' && lastLiveState.payload.bgVideo === videoUrl) return;
+      broadcastMessage({
+        type: 'PRELOAD_BACKGROUND',
+        bgVideo: videoUrl,
+        bgVideoLoop: !!document.getElementById('bg-video-loop')?.checked,
+        bgVideoSpeed: Number(document.getElementById('bg-video-speed')?.value || 1)
+      });
+    }
+
+    function scheduleBackgroundVideoPreload() {
+      clearTimeout(backgroundVideoPreloadTimer);
+      backgroundVideoPreloadTimer = setTimeout(sendBackgroundVideoPreload, 500);
+    }
+
     function nextSeq() {
       messageSeq += 1;
       return messageSeq;
@@ -272,6 +319,7 @@
             pendingHello = true;
           } else {
             sendSyncState();
+            sendBackgroundVideoPreload();
           }
         }
         return;
@@ -287,9 +335,10 @@
 
     function broadcastMessage(msg) {
       if (!isVmixMode() && channel) channel.postMessage(msg);
-      relaySend(msg);
+      const relayMessage = compactRelayMedia(msg);
+      relaySend(relayMessage);
       if (isVmixMode() && window.BSPDesktop && typeof window.BSPDesktop.sendVmixOutputMessage === 'function') {
-        window.BSPDesktop.sendVmixOutputMessage(msg).catch(() => {});
+        window.BSPDesktop.sendVmixOutputMessage(relayMessage).catch(() => {});
       }
       if (isVmixMode() && channel) channel.postMessage(msg);
       mirrorSyncMessage(msg);
@@ -500,7 +549,7 @@
         verseRaw = verseRaw.replace(/<span class="jo-verse-sup">.*?<\/span>\s*/g, '');
       }
       let verseHtml = convertHighlightsToHtml(verseRaw);
-      
+
       let fontSizeAdjusted = fontSizeLT;
       let lineHeightAdjusted = lineHeightLT;
       let fontSizeFullAdjusted = fontSizeFull;
@@ -544,7 +593,7 @@
       const ltRefAlignValue = (ltHAlignBible === 'justify')
         ? 'left'
         : (['left', 'right', 'center'].includes(ltHAlignBible) ? ltHAlignBible : 'center');
-      
+
       if (autoResize !== 'none' && mode !== 'full') {
         const lines = (p.raw || "").split('\n').length;
         if (autoResize === 'shrink' && lines > 2) {
@@ -635,7 +684,7 @@
           }
         }
       }
-      
+
       const isBibleFull = (mode === 'full') && livePointer.kind === 'bible';
       const longVerseFullKey = isBibleFull ? `${livePointer.version}#${liveLineCursor}` : null;
       if (mode === 'full') {
@@ -712,7 +761,7 @@
       } else {
         handleLongVerseFullFontState(false, longVerseFullKey);
       }
-    
+
       let bibleVer = '';
       let songTextPair = null;
       if (livePointer.kind === 'bible') {
@@ -733,7 +782,7 @@
         const ltRefAlignValue = (ltHAlignBible === 'justify')
           ? 'left'
           : (['left', 'right', 'center'].includes(ltHAlignBible) ? ltHAlignBible : 'center');
-        
+
         let primarySegment = '';
         if (mode === 'full') {
           primarySegment = buildFullBibleSegment({

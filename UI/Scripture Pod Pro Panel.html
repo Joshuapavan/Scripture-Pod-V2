@@ -17500,7 +17500,7 @@
 
               <div id="bg-video-url-row" style="display:block;margin-top:16px">
                 <div class="url-input-row">
-                  <input type="text" id="bg-video-url" placeholder="Paste video URL..." data-i18n-placeholder="settings_paste_video_url" class="settings-input" oninput="onAnyControlChange()">
+                  <input type="text" id="bg-video-url" placeholder="Paste video URL..." data-i18n-placeholder="settings_paste_video_url" class="settings-input" oninput="onAnyControlChange();scheduleBackgroundVideoPreload()">
                   <button type="button" class="url-clear-btn" onclick="clearBgUrl('bg-video-url')" data-i18n-title="common_clear">x</button>
                 </div>
               </div>
