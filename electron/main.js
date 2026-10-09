@@ -280,7 +280,8 @@ app.whenReady().then(() => {
     });
     if (result.canceled || !result.filePath) return { canceled: true };
     await fs.promises.writeFile(result.filePath, contents, 'utf8');
-    return { ok: true, filePath: result.filePath };
+    const { size } = await fs.promises.stat(result.filePath);
+    return { ok: true, filePath: result.filePath, bytesWritten: size };
   });
   ipcMain.handle('bsp:open-backup', async () => {
     const result = await dialog.showOpenDialog(mainWindow || undefined, {

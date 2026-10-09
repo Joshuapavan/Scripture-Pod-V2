@@ -1214,10 +1214,8 @@
         if (!dbOk) {
           console.warn('Backup export: falling back to in-memory data');
         }
-        if (!songRecords.length && songs.length) {
+        if (stateReady) {
           songRecords = songs.map(coerceSongRecord).filter(Boolean);
-        }
-        if (!bibleRecords.length && Object.keys(bibles).length) {
           bibleRecords = Object.keys(bibles).map(name => buildBibleRecord(name, bibles[name] || [], { isNew: false })).filter(Boolean);
         }
         if (stateReady && appState) {
@@ -1252,7 +1250,14 @@
         if (window.BSPDesktop && typeof window.BSPDesktop.saveBackup === 'function') {
           const result = await window.BSPDesktop.saveBackup(filename, json);
           if (result?.canceled) return;
-          if (!result?.ok) throw new Error('Desktop backup save failed');
+          if (!result?.ok || !Number.isFinite(result.bytesWritten) || result.bytesWritten <= 0) {
+            throw new Error('Desktop backup save produced an empty file');
+          }
+          console.info('Backup exported', {
+            songs: songRecords.length,
+            bibles: bibleRecords.length,
+            bytes: result.bytesWritten
+          });
           showToast(t('backup_exported_named').replace('{filename}', filename));
           return;
         }
