@@ -16259,32 +16259,6 @@
           <button class="btn" id="btn-prev" style="min-width:0;padding:0 10px" onclick="prevSlide()">←</button>
           <button class="btn" id="btn-next" style="min-width:0;padding:0 10px" onclick="nextSlide()">→</button>
         </div>
-        <div id="vmix-status-panel" style="display:none;border-top:1px solid var(--border);padding-top:12px;margin-top:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-            <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 auto">
-              <button class="btn" id="btn-vmix-panel-toggle" type="button" onclick="toggleVmixStatusPanel()" style="min-width:28px;padding:0 8px;font-weight:700">v</button>
-              <strong style="font-size:12px;white-space:nowrap">vMix Settings</strong>
-              <span id="vmix-status-summary" style="font-size:11px;color:var(--text-secondary);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">vMix disconnected</span>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn" id="btn-vmix-connect" type="button" onclick="vmixConnect()" style="min-height:34px;padding:0 12px;font-size:12px">Connect</button>
-              <button class="btn" id="btn-vmix-refresh" type="button" onclick="vmixReconnect()" style="min-height:34px;padding:0 12px;font-size:12px">Refresh</button>
-              <button class="btn" id="btn-vmix-show" type="button" style="display:none;min-height:34px;padding:0 12px;font-size:12px" onclick="handleVmixShowAction()">Show</button>
-              <button class="btn" id="btn-vmix-hide" type="button" style="display:none;min-height:34px;padding:0 12px;font-size:12px" onclick="handleVmixHideAction()">Hide</button>
-            </div>
-          </div>
-          <div id="vmix-status-body" style="display:flex;gap:12px;align-items:flex-start;margin-top:10px;flex-wrap:wrap;min-width:0">
-            <div style="display:flex;flex-direction:column;gap:2px;min-width:220px;flex:0 1 320px">
-              <strong id="vmix-connection-label" style="font-size:12px">vMix disconnected</strong>
-              <span id="vmix-output-label" style="font-size:11px;color:var(--text-secondary)">Output: Scripture Pod Pro Output</span>
-              <span id="vmix-mode-label" style="font-size:11px;color:var(--text-secondary)">Basic routing</span>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;flex:1 1 420px;min-width:260px">
-              <input id="vmix-display-url" type="text" readonly style="flex:1 1 auto;min-width:0;background:var(--panel-content-bg);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-size:11px">
-              <button class="btn" type="button" onclick="copyVmixDisplayUrl()" style="flex:0 0 auto;white-space:nowrap;min-height:34px;padding:0 12px;font-size:12px">Copy URL</button>
-            </div>
-          </div>
-        </div>
         <div class="main-panel-stacks" style="display:flex;justify-content:space-between;align-items:flex-start;border-top:1px solid var(--border);padding-top:16px;flex-wrap:wrap;gap:8px">
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:100px">
             <span style="font-size:11px;color:var(--text-secondary)"><span data-i18n="common_lines">Lines</span></span>
@@ -17780,7 +17754,7 @@
               <label class="settings-label">Host Mode</label>
               <select id="host-mode-select" class="settings-select">
                 <option value="obs">OBS</option>
-                <option value="vmix">vMix</option>
+                <option value="websocket">WebSocket Relay</option>
                 <option value="standalone">Standalone</option>
               </select>
             </div>
@@ -17791,78 +17765,7 @@
                 <button class="btn" type="button" title="Refresh network address" aria-label="Refresh network address" onclick="refreshLocalDisplayUrl()">↻</button>
                 <button class="btn" type="button" title="Copy display URL" aria-label="Copy display URL" onclick="copyLocalDisplayUrl()">⧉</button>
               </div>
-              <div style="font-size:11px;color:var(--text-secondary);margin-top:6px">Open this URL in a browser on another computer on the same network. Select vMix host mode to relay panel updates.</div>
-            </div>
-            <div style="border:1px solid var(--border);border-radius:10px;padding:12px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:10px">
-              <label class="mini-toggle" style="width:100%;justify-content:space-between">
-                <span>Enable vMix Integration</span>
-                <input type="checkbox" id="vmix-enable">
-              </label>
-              <div style="font-size:11px;color:var(--text-secondary)">Required for commands to vMix software. The LAN display relay only requires Host Mode set to vMix.</div>
-              <div class="settings-row" style="margin-bottom:0">
-                <div class="settings-field" style="margin-bottom:0">
-                  <label class="settings-label">vMix Host</label>
-                  <input type="text" id="vmix-host" class="settings-input" placeholder="127.0.0.1">
-                </div>
-                <div class="settings-field" style="margin-bottom:0">
-                  <label class="settings-label">Port</label>
-                  <input type="number" id="vmix-port" class="settings-input" min="1" max="65535" placeholder="8088">
-                </div>
-              </div>
-              <div class="settings-field" style="margin-bottom:0">
-                <label class="settings-label">Password</label>
-                <input type="password" id="vmix-password" class="settings-input" placeholder="Optional">
-              </div>
-              <div class="settings-field" style="margin-bottom:0">
-                <label class="settings-label">Display Host / IP</label>
-                <select id="vmix-display-host" class="settings-select"></select>
-              </div>
-              <div class="settings-field" style="margin-bottom:0">
-                <label class="settings-label">Output Input Name</label>
-                <input type="text" id="vmix-output-input-name" class="settings-input" placeholder="Scripture Pod Pro Output">
-              </div>
-              <div class="settings-row" style="margin-bottom:0">
-                <div class="settings-field" style="margin-bottom:0">
-                  <label class="settings-label">Output Mode</label>
-                  <select id="vmix-output-mode" class="settings-select">
-                    <option value="dedicated-input">Dedicated Input Only</option>
-                    <option value="overlay">Overlay</option>
-                    <option value="manual">Manual Control</option>
-                  </select>
-                </div>
-                <div class="settings-field" style="margin-bottom:0">
-                  <label class="settings-label">Overlay Channel</label>
-                  <select id="vmix-overlay-channel" class="settings-select">
-                    <option value="1">Overlay 1</option>
-                    <option value="2">Overlay 2</option>
-                    <option value="3">Overlay 3</option>
-                    <option value="4">Overlay 4</option>
-                  </select>
-                </div>
-              </div>
-              <div class="settings-row" style="margin-bottom:0">
-                <label class="mini-toggle" style="width:100%;justify-content:space-between">
-                  <span>Auto Show On Project</span>
-                  <input type="checkbox" id="vmix-auto-show">
-                </label>
-                <label class="mini-toggle" style="width:100%;justify-content:space-between">
-                  <span>Auto Hide On Clear</span>
-                  <input type="checkbox" id="vmix-auto-hide">
-                </label>
-              </div>
-              <div class="settings-row" style="margin-bottom:0">
-                <div class="settings-field" style="margin-bottom:0">
-                  <label class="settings-label">Transition</label>
-                  <select id="vmix-transition" class="settings-select">
-                    <option value="Cut">Cut</option>
-                    <option value="Fade">Fade</option>
-                  </select>
-                </div>
-                <label class="mini-toggle" style="width:100%;justify-content:space-between;align-self:end;padding-bottom:6px">
-                  <span>Reconnect On Startup</span>
-                  <input type="checkbox" id="vmix-reconnect-startup">
-                </label>
-              </div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:6px">Open this URL in a browser on another computer on the same network. WebSocket Relay sends live panel updates to that display.</div>
             </div>
             <div class="settings-field" style="margin-bottom:12px">
               <button class="btn" style="width:100%;" onclick="promptSavePreset()">💾 <span data-i18n="settings_save_preset">Save Current as Preset</span></button>
@@ -19272,52 +19175,52 @@
     })();
   </script>
   <style id="obs-isolated-mode-style">
-    body.vmix-mode #program-width-handle,
-    body.vmix-mode #program-display-panel,
-    body.vmix-mode #studio-dock,
-    body.vmix-mode #workspace-height-handle {
+    body.websocket-mode #program-width-handle,
+    body.websocket-mode #program-display-panel,
+    body.websocket-mode #studio-dock,
+    body.websocket-mode #workspace-height-handle {
       display: none !important;
     }
-    body.vmix-mode #left-workspace,
-    body.vmix-mode #main,
-    body.vmix-mode #main-workspace,
-    body.vmix-mode #editor-container,
-    body.vmix-mode .app-container,
-    body.vmix-mode #app-body-row,
-    body.vmix-mode #workspace-top {
+    body.websocket-mode #left-workspace,
+    body.websocket-mode #main,
+    body.websocket-mode #main-workspace,
+    body.websocket-mode #editor-container,
+    body.websocket-mode .app-container,
+    body.websocket-mode #app-body-row,
+    body.websocket-mode #workspace-top {
       min-width: 0 !important;
       width: auto !important;
       max-width: none !important;
     }
-    body.vmix-mode #main {
+    body.websocket-mode #main {
       flex: 1 1 auto !important;
     }
-    body.vmix-mode #sidebar {
+    body.websocket-mode #sidebar {
       min-width: 160px !important;
       width: 200px !important;
       max-width: 240px !important;
     }
-    body.vmix-mode #main {
+    body.websocket-mode #main {
       min-width: 0 !important;
       width: auto !important;
     }
-    body.vmix-mode #sidebar-width-handle {
+    body.websocket-mode #sidebar-width-handle {
       width: 4px !important;
     }
-    body.vmix-mode #lyric-editor,
-    body.vmix-mode #lyric-buttons,
-    body.vmix-mode .header-toolbar,
-    body.vmix-mode .nav-row,
-    body.vmix-mode .main-panel-stacks {
+    body.websocket-mode #lyric-editor,
+    body.websocket-mode #lyric-buttons,
+    body.websocket-mode .header-toolbar,
+    body.websocket-mode .nav-row,
+    body.websocket-mode .main-panel-stacks {
       min-width: 0 !important;
     }
-    body.vmix-mode .nav-row {
+    body.websocket-mode .nav-row {
       flex-wrap: wrap !important;
     }
-    body.vmix-mode #nav-mirror-search {
+    body.websocket-mode #nav-mirror-search {
       min-width: 0 !important;
     }
-    body.vmix-mode .live-controls {
+    body.websocket-mode .live-controls {
       position: sticky !important;
       bottom: 0 !important;
       z-index: 8 !important;

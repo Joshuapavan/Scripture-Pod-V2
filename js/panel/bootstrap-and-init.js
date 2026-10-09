@@ -44,7 +44,6 @@
         },
         host: {
           mode: HOST_MODE_OBS,
-          vmix: { ...vmixState }
         }
       };
     }
@@ -710,7 +709,7 @@
         }
       });
     })();
-    
+
     const THEME_ALIAS_MAP = Object.freeze({
       forest: 'neon-horizon',
       royal: 'midnight-bloom',
@@ -746,9 +745,6 @@
             }))
         : [];
       if (ui.hostMode) setHostMode(ui.hostMode, { silent: true });
-      if (ui.vmix && typeof ui.vmix === 'object') {
-        updateVmixSettings(ui.vmix, { silent: true });
-      }
       if (ui.theme) {
         const themeSelect = document.getElementById('theme-select');
         const normalizedTheme = normalizeThemeId(ui.theme);
@@ -1074,7 +1070,6 @@
       syncRemoteShowHostMode();
       updateRemoteShowDetails();
       connectRelay();
-      restoreVmixSettingsUi();
       applyHostModeUi();
       handleDualFontOverrideState({ suppressLiveUpdate: true });
       syncBgOpacitySlider();
@@ -1087,7 +1082,7 @@
       updateLtBibleVerseAlignVisibility();
       updateSongTextTransformControl();
     }
-    
+
     function setPresetPopoverOpen(nextOpen, opts = {}) {
       const pop = document.getElementById('preset-popover');
       const btn = document.getElementById('btn-preset');
@@ -1245,7 +1240,7 @@
       if (pop) pop.classList.remove('open');
       outputPopoverOpen = false;
     }
-    
+
     function injectFontFace(font) {
       if (!font || !font.name || !font.dataUrl || loadedFontNames.has(font.name)) return;
       const style = document.createElement('style');
@@ -1253,7 +1248,7 @@
       document.head.appendChild(style);
       loadedFontNames.add(font.name);
     }
-    
+
     function renderCustomFontList() {
       const list = document.getElementById('custom-font-list');
       if (!list) return;
@@ -1278,7 +1273,7 @@
         list.appendChild(row);
       });
     }
-    
+
     function renderFontFamilyOptions(selectedValue) {
       const select = document.getElementById('font-family');
       if (!select) return;
@@ -1454,19 +1449,19 @@
       const v = document.getElementById('text-color').value;
       document.getElementById('text-color-hex').value = v.toUpperCase();
     }
-    
+
     function syncTextColorFromHex() {
       const v = (document.getElementById('text-color-hex').value || "").trim();
       if (/^#([0-9a-fA-F]{6})$/.test(v)) {
         document.getElementById('text-color').value = v;
       }
     }
-    
+
     function syncRefColorFromPicker() {
       const v = document.getElementById('ref-color').value;
       document.getElementById('ref-color-hex').value = v.toUpperCase();
     }
-    
+
     function syncRefColorFromHex() {
       const v = (document.getElementById('ref-color-hex').value || "").trim();
       if (/^#([0-9a-fA-F]{6})$/.test(v)) {
@@ -1479,7 +1474,7 @@
       document.getElementById('ref-bg-color-hex').value = v.toUpperCase();
       ltRefBgColor = v;
     }
-    
+
     function syncRefBgColorFromHex() {
       const v = (document.getElementById('ref-bg-color-hex').value || "").trim();
       if (/^#([0-9a-fA-F]{6})$/.test(v)) {
@@ -1601,7 +1596,7 @@
       if (previewMainTextEl) previewMainTextEl.innerHTML = previewBody;
       if (previewVerseTextEl) previewVerseTextEl.innerHTML = previewBody;
       styleCanvasState.sample = { ref: previewRef, version: previewVer, verseHtml: previewBody };
-      
+
       const refBox = style.refBox || ltStyles['custom']?.refBox || {
         bgColor: '#00411C',
         borderColor: '#FFFFFF',
@@ -1625,7 +1620,7 @@
       if (gridToggle) gridToggle.checked = meta.showGrid ?? true;
       const safeToggle = document.getElementById('safe-toggle');
       if (safeToggle) safeToggle.checked = meta.showSafe ?? true;
-      
+
       const refFillType = refBox.fillType || (refBox.gradientStart || refBox.gradientEnd ? 'gradient' : 'color');
       setVal('se-ref-fill-type', refFillType);
       toggleFillFields('refBox', refFillType);
@@ -2054,7 +2049,7 @@
       if (seVersionTextShadowOpacity) seVersionTextShadowOpacity.value = versionTextShadowOpacityVal;
       if (seVersionTextShadowBlur) seVersionTextShadowBlur.value = versionTextShadow.blur ?? 8;
       if (seVersionTextShadowOffset) seVersionTextShadowOffset.value = versionTextShadow.offsetX ?? 2;
-      
+
       tempStyleChanges = null;
       openModal('styleEditorModal');
       setupStyleEditorCollapsibles();
@@ -2794,7 +2789,7 @@
       // Helper for safe value access
       const getVal = (id, def) => { const el = document.getElementById(id); return el ? el.value : def; };
       const getNum = (id, def) => Number(getVal(id, def)) || def;
-      
+
       const barPadX = getNum('se-bar-pad-x', 10);
       const barPadY = getNum('se-bar-pad-y', 10);
       return {
@@ -3016,11 +3011,11 @@
 
     function applyStyleChanges() {
       if (!editingStyleId || !ltStyles[editingStyleId]) return;
-      
+
       tempStyleChanges = collectStyleFormData();
       ltStyle = editingStyleId;
       renderLtStylePicker();
-      
+
       if (isLive && livePointer) {
         scheduleLiveUpdate();
         showToast(t('style_applied_to_output'));
@@ -3031,13 +3026,13 @@
 
     function saveStyleEdits() {
       if (!editingStyleId || !ltStyles[editingStyleId]) return;
-      
+
       const changes = tempStyleChanges || collectStyleFormData();
-      
+
       ltStyles[editingStyleId] = mergeStyleData(ltStyles[editingStyleId], changes);
-      
+
       tempStyleChanges = null;
-      
+
       saveToStorageDebounced();
       saveToStorage();
       Promise.all([flushAppState(), persistLtStyles()]).finally(() => {
@@ -3102,7 +3097,7 @@
     function renderLtStylePicker() {
       const container = document.getElementById('lt-style-container');
       container.innerHTML = '';
-      
+
       Object.keys(ltStyles).forEach(styleId => {
         const style = ltStyles[styleId];
         const btn = document.createElement('button');
@@ -3110,7 +3105,7 @@
         btn.id = `lt-style-${styleId}`;
         btn.textContent = getStyleName(style) || styleId;
         btn.onclick = () => setLtStyle(styleId);
-        
+
         if (style.type === 'custom' || style.deletable) {
           const editBtn = document.createElement('button');
           editBtn.className = 'lt-style-edit';
@@ -3121,7 +3116,7 @@
           };
           btn.appendChild(editBtn);
         }
-        
+
         if (style.deletable) {
           const delBtn = document.createElement('button');
           delBtn.className = 'lt-style-delete';
@@ -3132,7 +3127,7 @@
           };
           btn.appendChild(delBtn);
         }
-        
+
         container.appendChild(btn);
       });
       renderStyleEditorSelect();
@@ -3356,9 +3351,9 @@
         console.log('No file selected');
         return;
       }
-      
+
       console.log('Importing style file:', file.name, file.type, file.size);
-      
+
       const reader = new FileReader();
       reader.onerror = (err) => {
         console.error('FileReader error:', err);
@@ -3370,13 +3365,13 @@
           const styleData = JSON.parse(reader.result);
           console.log('Parsed style data:', Object.keys(styleData));
           const styleId = `custom_${Date.now()}`;
-          
+
           // Check if this is a Lower Third Designer export (has refBox/mainBar at top level)
-          const isLowerThirdDesigner = styleData.refBox || styleData.mainBar || styleData.layers || 
+          const isLowerThirdDesigner = styleData.refBox || styleData.mainBar || styleData.layers ||
             (styleData.meta && styleData.meta.app === 'Lower Third Designer');
-          
+
           console.log('Is Lower Third Designer format:', isLowerThirdDesigner);
-          
+
           if (styleData.template && !isLowerThirdDesigner) {
             // Legacy template format (.fstemplate)
             const item1 = styleData.template.items[0];
@@ -3395,10 +3390,10 @@
           } else {
             // Lower Third Designer format (Index design.html export)
             // Deep clone layers to preserve all properties
-            const importedLayers = Array.isArray(styleData.layers) 
-              ? styleData.layers.map(layer => JSON.parse(JSON.stringify(layer))) 
+            const importedLayers = Array.isArray(styleData.layers)
+              ? styleData.layers.map(layer => JSON.parse(JSON.stringify(layer)))
               : [];
-            
+
             ltStyles[styleId] = {
               name: styleData.name || 'Imported Style',
               type: 'custom',
@@ -3414,10 +3409,10 @@
               layers: importedLayers,
               meta: styleData.meta ? JSON.parse(JSON.stringify(styleData.meta)) : {}
             };
-            
+
             console.log('Imported Lower Third Designer style:', styleData.name, ltStyles[styleId]);
           }
-          
+
           renderLtStylePicker();
           saveToStorageDebounced();
           Promise.all([flushAppState(), persistLtStyles()]).finally(() => {
@@ -3532,7 +3527,7 @@
           outputPopoverOpen = false;
         }
       });
-      
+
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && presetPopoverOpen) {
           setPresetPopoverOpen(false);
@@ -3602,7 +3597,7 @@
         disconnectRelay();
       });
     }
-    
+
     function setupSidebarResizePersistence() {
       const sidebar = document.getElementById('sidebar');
       const vHandle = document.getElementById('sidebar-resize-handle');
@@ -4429,7 +4424,7 @@
         });
       });
     }
-    
+
     function setupStyleEditorCollapsibles() {
       document.querySelectorAll('#styleEditorModal .editor-section').forEach(sec => {
         const title = sec.querySelector('.editor-section-title');
@@ -4471,11 +4466,7 @@
 
       appState = mergeAppStateWithDefaults(stateValue || {});
       const persistedHostMode = stateValue?.host?.mode || (appState.settings && appState.settings.hostMode) || HOST_MODE_OBS;
-      const persistedVmix = stateValue?.host?.vmix || (appState.settings && appState.settings.vmix) || null;
       setHostMode(persistedHostMode, { silent: true });
-      if (persistedVmix && typeof persistedVmix === 'object') {
-        updateVmixSettings(persistedVmix, { silent: true });
-      }
       let localPreferredLanguage = '';
       try { localPreferredLanguage = localStorage.getItem('bible_app_language') || ''; } catch (_) {}
       const hasLocalPreferredLanguage = LANGUAGES.some(entry => entry.code === localPreferredLanguage);
@@ -4585,7 +4576,6 @@
         const refInput = document.getElementById('ref-font-size-lt-val');
         if (refInput) refInput.value = String(ltRefFontSize);
       }
-      restoreVmixSettingsUi();
       applyHostModeUi();
 
       handleBgTypeChange();
@@ -4725,9 +4715,6 @@
       }
       sendSyncState();
       requestRelayState();
-      if (isVmixMode() && vmixState.enabled && vmixState.reconnectOnStartup !== false) {
-        vmixReconnect().catch(() => {});
-      }
     }
 
     function applyObsCompatibilityUi() {
@@ -4762,11 +4749,10 @@
     async function initControlPanel() {
       initStandaloneTools();
       _restoreAudioBufferSizeSetting();
-      bindVmixSettingsInputs();
+      bindHostModeInput();
       applyObsCompatibilityUi();
       // Ensure CSS vars match the currently selected theme on cold startup.
       handleThemeChange();
-      restoreVmixSettingsUi();
       applyHostModeUi();
       refreshLocalServerInfo().catch(() => {});
       // Preload camera/audio device lists so source properties open instantly.

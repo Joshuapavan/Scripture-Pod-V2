@@ -1,13 +1,14 @@
     function getHostMode() {
-      return [HOST_MODE_OBS, HOST_MODE_VMIX, HOST_MODE_STANDALONE].includes(hostMode) ? hostMode : HOST_MODE_OBS;
+      if (hostMode === 'vmix') return HOST_MODE_WEBSOCKET;
+      return [HOST_MODE_OBS, HOST_MODE_WEBSOCKET, HOST_MODE_STANDALONE].includes(hostMode) ? hostMode : HOST_MODE_OBS;
     }
 
     function isObsMode() {
       return getHostMode() === HOST_MODE_OBS;
     }
 
-    function isVmixMode() {
-      return getHostMode() === HOST_MODE_VMIX;
+    function isWebSocketMode() {
+      return getHostMode() === HOST_MODE_WEBSOCKET;
     }
 
     function isStandaloneMode() {
@@ -359,13 +360,13 @@
 
     function applyHostModeUi() {
       document.body.classList.toggle('obs-isolated', isObsMode());
-      document.body.classList.toggle('vmix-mode', isVmixMode());
+      document.body.classList.toggle('websocket-mode', isWebSocketMode());
       document.body.classList.toggle('standalone-mode', isStandaloneMode());
-      updateVmixStatusUi();
     }
 
     function setHostMode(mode, opts = {}) {
-      hostMode = [HOST_MODE_OBS, HOST_MODE_VMIX, HOST_MODE_STANDALONE].includes(mode) ? mode : HOST_MODE_OBS;
+      const normalizedMode = mode === 'vmix' ? HOST_MODE_WEBSOCKET : mode;
+      hostMode = [HOST_MODE_OBS, HOST_MODE_WEBSOCKET, HOST_MODE_STANDALONE].includes(normalizedMode) ? normalizedMode : HOST_MODE_OBS;
       applyHostModeUi();
       if (!opts.silent) saveToStorageDebounced();
     }
@@ -422,33 +423,12 @@
       updateVmixStatusUi();
     }
 
-    function bindVmixSettingsInputs() {
+    function bindHostModeInput() {
       const hostModeEl = document.getElementById('host-mode-select');
       if (hostModeEl && !hostModeEl.dataset.bound) {
         hostModeEl.dataset.bound = '1';
         hostModeEl.addEventListener('change', () => setHostMode(hostModeEl.value));
       }
-      const bindings = [
-        ['vmix-enable', (el) => ({ enabled: el.checked })],
-        ['vmix-host', (el) => ({ host: el.value.trim() })],
-        ['vmix-port', (el) => ({ port: el.value.trim() })],
-        ['vmix-password', (el) => ({ password: el.value })],
-        ['vmix-display-host', (el) => ({ displayHost: el.value.trim() })],
-        ['vmix-output-input-name', (el) => ({ outputInputName: el.value.trim() })],
-        ['vmix-output-mode', (el) => ({ outputMode: el.value })],
-        ['vmix-overlay-channel', (el) => ({ overlayChannel: el.value })],
-        ['vmix-auto-show', (el) => ({ autoShowOnProject: el.checked })],
-        ['vmix-auto-hide', (el) => ({ autoHideOnClear: el.checked })],
-        ['vmix-transition', (el) => ({ transition: el.value })],
-        ['vmix-reconnect-startup', (el) => ({ reconnectOnStartup: el.checked })]
-      ];
-      bindings.forEach(([id, buildPatch]) => {
-        const el = document.getElementById(id);
-        if (!el || el.dataset.bound) return;
-        el.dataset.bound = '1';
-        const eventName = (el.type === 'checkbox' || el.tagName === 'SELECT') ? 'change' : 'input';
-        el.addEventListener(eventName, () => updateVmixSettings(buildPatch(el)));
-      });
     }
 
 

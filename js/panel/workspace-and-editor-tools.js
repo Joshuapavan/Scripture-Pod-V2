@@ -69,13 +69,13 @@
     }
 
     function getDisplayFileForTab(tabId, mode = 'embedded') {
-      if (isVmixMode() && localServerInfo && localServerInfo.displayUrl) {
+      if (isWebSocketMode() && localServerInfo && localServerInfo.displayUrl) {
         return localServerInfo.displayUrl;
       }
       const params = new URLSearchParams();
       params.set(mode === 'standalone' ? 'standalone' : 'embedded', '1');
       params.set('hostMode', getHostMode());
-      if (isVmixMode()) {
+      if (isWebSocketMode()) {
         const relayHost = resolveRelayHost() || '127.0.0.1';
         const relayPort = getRelayPort();
         params.set('relayPort', relayPort);
@@ -224,7 +224,7 @@
       refreshSongTranslationPanel(currentItem);
       if (isLive && livePointer && livePointer.kind === 'songs' && livePointer.index === currentIndex) scheduleLiveUpdate();
     }
-    
+
     function captureSingleLineFontBaseline() {
       if (singleLineFontSizeSnapshot != null) return;
       if (linesPerPage !== 1) return;
@@ -470,7 +470,7 @@
       }
       if (!opts.silent) onAnyControlChange();
     }
-    
+
     function setRatio(r) {
       if (r === 'custom') r = 'full';
       const prevRatio = activeRatio;
@@ -478,7 +478,7 @@
       document.getElementById('ratio-full').classList.toggle('active', r === 'full');
       document.getElementById('ratio-lt').classList.toggle('active', r === '16-9');
       document.getElementById('ratio-custom').classList.toggle('active', r === 'custom');
-      
+
       if (r === 'custom' && ltStyle === 'default') setLtStyle('custom');
       if (r === 'full' && prevRatio !== 'full') document.getElementById('bg-toggle').checked = true;
       if (r === '16-9') applyLtBgDefaultForTab(getEffectiveContentTab());
@@ -486,7 +486,7 @@
       if (isLive && livePointer && panelKind && livePointer.kind === panelKind) {
         liveRatio = r;
       }
-      
+
       handleDualFontOverrideState();
       syncBgOpacitySlider();
       updateSongTextTransformControl();
@@ -674,7 +674,7 @@
         if (el) el.classList.toggle('active', vVal === key);
       });
     }
-    
+
     function setRefBgEnabled(enabled, opts = {}) {
       refBgEnabled = !!enabled;
       const onBtn = document.getElementById('ref-bg-toggle-on');
@@ -1386,7 +1386,7 @@
     function isBibleContentActive() {
       return !!(currentItem && getIsBibleItem(currentItem));
     }
-    
+
     function setEditorMode(m) {
       if (isBibleContentActive() && m === 'text') return;
       document.getElementById('lyric-editor').style.display = m === 'text' ? 'block' : 'none';
@@ -1402,7 +1402,7 @@
       refreshWorkspaceLayoutUi();
       saveToStorageDebounced();
     }
-    
+
     function getScheduleEntryKey(entry) {
       if (!entry) return null;
       if (entry._metaKind === 'bible_verse') {
@@ -1457,7 +1457,7 @@
         duplicateMessage: 'This entry already exists on the setlist; moved to the top'
       });
     }
-    
+
     function removeFromSet(i, e) {
       e.stopPropagation();
       schedule.splice(i, 1);
@@ -1466,7 +1466,7 @@
       renderSongs();
       showToast('Removed from setlist');
     }
-    
+
     function deleteItem(i, e) {
       e.stopPropagation();
       if (sidebarTab === 'songs') {
@@ -1517,7 +1517,7 @@
       showToast('Song title renamed');
       return true;
     }
-    
+
     function prevSlide() {
       if (!currentItem) return;
       if (lineCursor > 0) {
@@ -1532,7 +1532,7 @@
         saveToStorageDebounced();
       }
     }
-    
+
     function nextSlide() {
       if (!currentItem) return;
       const pages = getPagesFromItem(currentItem, getIsBibleItem(currentItem));
@@ -1548,7 +1548,7 @@
         saveToStorageDebounced();
       }
     }
-    
+
     function openModal(id) {
       const modal = document.getElementById(id);
       if (!modal) return;
@@ -1612,7 +1612,7 @@
         document.addEventListener('mousedown', modal._outsideClickHandler);
       }
     }
-    
+
     function closeModal(id) {
       if (id === 'styleEditorModal') {
         try {
@@ -2132,7 +2132,7 @@
         setAutoLyricsLookupBusy(false);
       }
     }
-    
+
     function updateSidebarToggleTooltip() {
       const s = document.getElementById('sidebar');
       if (!s) return;
@@ -2624,4 +2624,4 @@
       positionSidebarPopup();
       positionSidebarQuickActions();
     }, true);
-    
+

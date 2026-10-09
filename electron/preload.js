@@ -16,8 +16,8 @@ const BSPDesktop = {
   async sendOutputMessage(message) {
     return ipcRenderer.invoke('bsp:send-output-message', message);
   },
-  async sendVmixOutputMessage(message) {
-    return ipcRenderer.invoke('bsp:send-vmix-output-message', message);
+  async sendWebSocketOutputMessage(message) {
+    return ipcRenderer.invoke('bsp:send-websocket-output-message', message);
   },
   async requestOutputFullscreen() {
     return ipcRenderer.invoke('bsp:request-output-fullscreen');

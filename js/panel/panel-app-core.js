@@ -1,7 +1,7 @@
     // ===== CONSTANTS / GLOBALS =====
     const CHANNEL_NAME = 'scripture_pod_pro_v1';
     const HOST_MODE_OBS = 'obs';
-    const HOST_MODE_VMIX = 'vmix';
+    const HOST_MODE_WEBSOCKET = 'websocket';
     const HOST_MODE_STANDALONE = 'standalone';
     const BSP_GITHUB_REPO_URL = 'https://github.com/Joshuapavan/Scripture-Pod-V2';
     const BSP_GITHUB_ISSUES_URL = `${BSP_GITHUB_REPO_URL}/issues`;

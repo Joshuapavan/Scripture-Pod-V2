@@ -390,13 +390,12 @@
 
     function broadcastMessage(msg) {
       const outputMessage = mapOutputMessageMedia(msg);
-      if (!isVmixMode() && channel) channel.postMessage(outputMessage);
+      if (channel) channel.postMessage(outputMessage);
       const relayMessage = compactRelayMedia(outputMessage);
       relaySend(relayMessage);
-      if (isVmixMode() && window.BSPDesktop && typeof window.BSPDesktop.sendVmixOutputMessage === 'function') {
-        window.BSPDesktop.sendVmixOutputMessage(relayMessage).catch(() => {});
+      if (window.BSPDesktop && typeof window.BSPDesktop.sendWebSocketOutputMessage === 'function') {
+        window.BSPDesktop.sendWebSocketOutputMessage(relayMessage).catch(() => {});
       }
-      if (isVmixMode() && channel) channel.postMessage(outputMessage);
       mirrorSyncMessage(outputMessage);
     }
 

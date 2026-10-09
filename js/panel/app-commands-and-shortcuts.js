@@ -16,15 +16,8 @@
       updateButtonView();
       setLtFontInputValue(getEffectiveLtFont());
       handleSongFullFontState();
-      if (isVmixMode()) {
-        vmixAfterClear().catch((error) => {
-          vmixConnectionState = 'error';
-          vmixLastError = error && error.message ? error.message : 'vMix clear failed';
-          updateVmixStatusUi();
-        });
-      }
     }
-    
+
     function clearSearch() {
       const input = document.getElementById('song-search');
       const mirror = document.getElementById('nav-mirror-search');
@@ -36,7 +29,7 @@
       renderSongs();
       saveToStorageDebounced();
     }
-    
+
     function resetLTPosition() {
       const textXEl = document.getElementById('text-x');
       const textYEl = document.getElementById('text-y');
@@ -56,7 +49,7 @@
       onAnyControlChange();
       showToast(t('settings_position_reset_default'));
     }
-    
+
     function confirmReset() {
       showConfirm(t('settings_reset_plugin'), t('settings_reset_plugin_confirm'), () => {
         resetAppData();
@@ -91,7 +84,7 @@
         showToast(t('common_reset_failed'));
       }
     }
-    
+
     function showConfirm(title, message, callback, showInput = false, initialInput = '') {
       document.getElementById('confirm-title').innerText = title;
       document.getElementById('confirm-message').innerText = message;
@@ -113,7 +106,7 @@
         }, 10);
       }
     }
-    
+
     function createNewItem() {
       const input = document.getElementById('new-song-title');
       const artistInput = document.getElementById('new-song-artist');
@@ -158,7 +151,7 @@
       saveToStorageDebounced();
       showToast(fetchedLyrics ? t('song_created_with_fetched_lyrics') : t('song_created'));
     }
-    
+
     function setupKeyboardShortcuts() {
       document.addEventListener('keydown', (e) => {
         const target = e.target;
@@ -319,4 +312,4 @@
         }).catch(() => {});
       });
     }
-    
+

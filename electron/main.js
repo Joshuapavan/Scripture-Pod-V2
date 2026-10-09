@@ -58,7 +58,7 @@ function getLocalServerInfo() {
     preferredHost,
     availableHosts: ['127.0.0.1', ...addresses],
     displayPath: '/UI/Scripture%20Pod%20Pro_display.html',
-    displayUrl: `http://${preferredHost}:${LOCAL_HTTP_PORT}/UI/Scripture%20Pod%20Pro_display.html?hostMode=vmix&relay=ws://${preferredHost}:${LOCAL_RELAY_PORT}`,
+    displayUrl: `http://${preferredHost}:${LOCAL_HTTP_PORT}/UI/Scripture%20Pod%20Pro_display.html?hostMode=websocket&relay=ws://${preferredHost}:${LOCAL_RELAY_PORT}`,
     relayUrl: `ws://${preferredHost}:${LOCAL_RELAY_PORT}`
   };
 }
@@ -316,7 +316,7 @@ app.whenReady().then(() => {
     outputWindow.webContents.send('bsp:output-message', message);
     return { ok: true };
   });
-  ipcMain.handle('bsp:send-vmix-output-message', (_event, message) => {
+  ipcMain.handle('bsp:send-websocket-output-message', (_event, message) => {
     broadcastRelayMessage(message);
     return { ok: true };
   });

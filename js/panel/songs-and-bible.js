@@ -581,7 +581,7 @@
         renderMode: 'stacked'
       };
     }
-    
+
     function scrollButtonsToTop() {
       const container = document.getElementById('lyric-buttons');
       if (container) container.scrollTop = 0;
@@ -744,15 +744,15 @@
         ? `${bookLabel} ${chap}`
         : (shortenBooks ? shortenBibleBookName(title) : title);
       const lines = (pageRaw || "").split('\n');
-      
+
       if (lines.length === 0) return baseTitle;
-      
+
       const firstVerseMatch = lines[0].match(/^(\d+)\s+/);
       const firstVerseNo = firstVerseMatch ? firstVerseMatch[1] : "";
-      
+
       if (book && chap && firstVerseNo) {
         let lastVerseNo = firstVerseNo;
-        
+
         for (let i = lines.length - 1; i >= 0; i--) {
           const verseMatch = lines[i].match(/^(\d+)\s+/);
           if (verseMatch) {
@@ -760,23 +760,23 @@
             break;
           }
         }
-        
+
         if (firstVerseNo !== lastVerseNo) return `${bookLabel} ${chap}:${firstVerseNo}-${lastVerseNo}`;
         return `${bookLabel} ${chap}:${firstVerseNo}`;
       }
       return baseTitle;
     }
-    
+
     function getEffectiveLtFont() {
       if (activeRatio === 'custom') return ltFontCustom;
       if (isLive && liveKind) return (liveKind === 'bible') ? ltFontBible : ltFontSongs;
       return (sidebarTab === 'bible') ? ltFontBible : ltFontSongs;
     }
-    
+
     function setLtFontInputValue(v) {
       document.getElementById('font-size-lt-val').value = v;
     }
-    
+
     function handleLtFontInput() {
       const v = Number(document.getElementById('font-size-lt-val').value || 30);
       const currentIsBible = currentItem ? getIsBibleItem(currentItem) : false;
@@ -793,13 +793,13 @@
       }
       onAnyControlChange();
     }
-    
+
     function handleLtReferenceFontInput() {
       const v = Number(document.getElementById('ref-font-size-lt-val').value || 26);
       ltRefFontSize = v;
       onAnyControlChange();
     }
-    
+
     function handleCustomFontInput() {
       const v = Number(document.getElementById('font-size-custom-val').value || 38);
       ltFontCustom = v;
@@ -1128,7 +1128,7 @@
         }
         block.appendChild(row);
       });
-      
+
       if (preserveScroll) {
         const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
         container.scrollTop = Math.min(prevScrollTop, maxScroll);
@@ -1292,13 +1292,6 @@
             selectItem(nextIndex);
           }
         }
-      }
-      if (isVmixMode()) {
-        vmixAfterProjectLive().catch((error) => {
-          vmixConnectionState = 'error';
-          vmixLastError = error && error.message ? error.message : 'vMix update failed';
-          updateVmixStatusUi();
-        });
       }
       if (!isBible && sidebarTab === 'songs') {
         preserveLtBgWhenSwitchingToSongs = false;

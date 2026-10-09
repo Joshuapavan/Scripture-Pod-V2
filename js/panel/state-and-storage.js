@@ -1222,7 +1222,6 @@
         remoteShowPairCode: document.getElementById('remote-show-pair-code')?.value,
         feedbackApiUrl: normalizeFeedbackApiUrl(appState?.settings?.feedbackApiUrl),
         hostMode: getHostMode(),
-        vmix: getVmixSettings(),
         theme: document.getElementById('theme-select')?.value || 'skyline',
         sidebarLayout: document.getElementById('sidebar-layout-select')?.value || sidebarLayoutMode || 'layout2',
         workspaceLayoutMode: document.getElementById('workspace-layout-mode-select')?.value || workspaceLayoutMode || 'focused',
