@@ -2594,6 +2594,7 @@
         rafId: 0,
         swapping: false,
         enabled: false,
+        nativeLoopFallback: false,
         src: '',
         playbackRate: 1,
         revealOpacity: 1
@@ -2621,6 +2622,61 @@
     function startSeamlessLoopMonitor(controller) {
       if (!controller || controller.rafId) return;
       const fadeMs = 120;
+      const fallbackToNativeLoop = (source) => {
+        if (controller.src !== source) return;
+        controller.enabled = false;
+        controller.nativeLoopFallback = true;
+        controller.swapping = false;
+        if (controller.rafId) cancelAnimationFrame(controller.rafId);
+        controller.rafId = 0;
+        const primary = controller.primary;
+        hideVideoElement(controller.secondary, false);
+        controller.active = primary;
+        controller.inactive = controller.secondary;
+        primary.loop = true;
+        primary.style.display = 'block';
+        primary.style.opacity = `${controller.revealOpacity}`;
+        try { primary.currentTime = 0; } catch (_) {}
+        const fallbackPlay = primary.play();
+        if (fallbackPlay && fallbackPlay.catch) fallbackPlay.catch(() => {});
+      };
+      const beginSwap = (active, inactive, source) => {
+        const revealIncomingFrame = () => {
+          if (!controller.enabled || controller.active !== active || controller.src !== source) {
+            return;
+          }
+          inactive.style.transition = `opacity ${fadeMs}ms linear`;
+          active.style.transition = `opacity ${fadeMs}ms linear`;
+          requestAnimationFrame(() => {
+            if (!controller.enabled || controller.active !== active || controller.src !== source) return;
+            inactive.style.opacity = `${controller.revealOpacity}`;
+            active.style.opacity = '0';
+          });
+          setTimeout(() => {
+            if (!controller.enabled || controller.active !== active || controller.src !== source) return;
+            hideVideoElement(active, false);
+            inactive.style.transition = '';
+            controller.active = inactive;
+            controller.inactive = active;
+            controller.swapping = false;
+          }, fadeMs + 40);
+        };
+        inactive.currentTime = 0.001;
+        const playPromise = inactive.play();
+        const waitForFrame = () => {
+          if (!controller.enabled || controller.active !== active || controller.src !== source) return;
+          if (typeof inactive.requestVideoFrameCallback === 'function') {
+            inactive.requestVideoFrameCallback(revealIncomingFrame);
+          } else {
+            requestAnimationFrame(revealIncomingFrame);
+          }
+        };
+        if (playPromise && typeof playPromise.then === 'function') {
+          playPromise.then(waitForFrame).catch(() => fallbackToNativeLoop(source));
+        } else {
+          waitForFrame();
+        }
+      };
       const onFrame = () => {
         if (!controller.enabled) {
           controller.rafId = 0;
@@ -2635,26 +2691,21 @@
             const remaining = duration - current;
             if (remaining <= 0.16) {
               controller.swapping = true;
-              inactive.currentTime = 0.001;
-              inactive.playbackRate = controller.playbackRate;
-              inactive.loop = false;
-              inactive.style.display = 'block';
-              inactive.style.opacity = '0';
-              inactive.style.transition = `opacity ${fadeMs}ms linear`;
-              active.style.transition = `opacity ${fadeMs}ms linear`;
-              const p = inactive.play();
-              if (p && p.catch) p.catch(() => {});
-              requestAnimationFrame(() => {
-                inactive.style.opacity = `${controller.revealOpacity}`;
-                active.style.opacity = '0';
-              });
-              setTimeout(() => {
-                hideVideoElement(active, false);
-                inactive.style.transition = '';
-                controller.active = inactive;
-                controller.inactive = active;
-                controller.swapping = false;
-              }, fadeMs + 40);
+                const source = controller.src;
+                inactive.playbackRate = controller.playbackRate;
+                inactive.loop = false;
+                inactive.style.display = 'block';
+                inactive.style.opacity = '0';
+                if (inactive.readyState >= 2) {
+                  beginSwap(active, inactive, source);
+                } else {
+                  inactive.addEventListener('canplay', function onCanPlay() {
+                    inactive.removeEventListener('canplay', onCanPlay);
+                    if (controller.enabled && controller.active === active && controller.src === source) {
+                      beginSwap(active, inactive, source);
+                    }
+                  }, { once: true });
+                }
             }
           }
         }
@@ -2673,6 +2724,7 @@
       const srcChanged = nextSrc && nextSrc !== prevSrc;
       const wantsFadeOut = !!options.fadeOut;
       const loopController = getSeamlessLoopController(videoEl);
+      if (srcChanged && loopController) loopController.nativeLoopFallback = false;
       if (loopController && (!loop || !nextSrc || !shouldPlay || srcChanged)) {
         stopSeamlessLoop(loopController, { clearSrc: !nextSrc && !wantsFadeOut, resetActiveToPrimary: true });
       }
@@ -2692,14 +2744,14 @@
         videoEl.load();
       }
       const show = !!(shouldPlay && nextSrc);
-      videoEl.loop = loop && !loopController;
+      videoEl.loop = loop && (!loopController || loopController.nativeLoopFallback);
       videoEl.playbackRate = playbackRate;
       if (loopController) {
         loopController.playbackRate = playbackRate;
         loopController.revealOpacity = revealOpacity;
       }
 
-      if (show && loop && loopController) {
+      if (show && loop && loopController && !loopController.nativeLoopFallback) {
         const active = loopController.active || videoEl;
         const inactive = loopController.inactive || loopController.secondary;
         loopController.enabled = true;
