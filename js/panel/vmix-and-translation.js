@@ -111,14 +111,15 @@
     }
 
     function getVmixDisplayUrl() {
+      const displayPath = localServerInfo?.displayPath || '/UI/Scripture%20Pod%20Pro_display.html';
       if (localServerInfo) {
         const selectedHost = String(vmixState.displayHost || '').trim() || localServerInfo.preferredHost || '127.0.0.1';
-        return `http://${selectedHost}:${localServerInfo.httpPort}/BSP_display.html?hostMode=vmix&relay=ws://${selectedHost}:${localServerInfo.relayPort}`;
+        return `http://${selectedHost}:${localServerInfo.httpPort}${displayPath}?hostMode=vmix&relay=ws://${selectedHost}:${localServerInfo.relayPort}`;
       }
       const relayHost = String(vmixState.displayHost || '').trim() || resolveRelayHost() || '127.0.0.1';
       const relayPort = getRelayPort();
       const httpPort = getHttpPort();
-      return `http://${relayHost}:${httpPort}/BSP_display.html?hostMode=vmix&relay=ws://${relayHost}:${relayPort}`;
+      return `http://${relayHost}:${httpPort}${displayPath}?hostMode=vmix&relay=ws://${relayHost}:${relayPort}`;
     }
 
     async function copyVmixDisplayUrl() {
