@@ -135,7 +135,8 @@
         ? bgVideoUploadDataUrl
         : String(document.getElementById('bg-video-url')?.value || '').trim();
       if (!videoData) return;
-      if (lastLiveState?.kind === 'update' && lastLiveState.payload?.bgType === 'video' && lastLiveState.payload.bgVideo === videoData) return;
+      const alreadyCached = !videoData.startsWith('data:') || backgroundMediaUrlCache.has(videoData);
+      if (alreadyCached && lastLiveState?.kind === 'update' && lastLiveState.payload?.bgType === 'video' && lastLiveState.payload.bgVideo === videoData) return;
       let videoUrl = videoData;
       try {
         videoUrl = await cacheBackgroundMediaForOutput(videoData);

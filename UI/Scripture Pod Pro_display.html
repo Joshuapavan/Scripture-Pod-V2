@@ -1092,6 +1092,13 @@
     }
 
     function handleInboundMessage(d, source) {
+      if (d && d.type === 'RS_ENVELOPE') {
+        const payload = d.payload;
+        if (d.version && Number(d.version) < 1) return;
+        if (!payload || typeof payload !== 'object') return;
+        handleInboundMessage(payload, source);
+        return;
+      }
       debug(`MSG(${source}): ` + (d.type || 'unknown') + (d.text ? ' — ' + (String(d.text).slice(0,80)) : ''));
       try {
         switch (d.type) {
