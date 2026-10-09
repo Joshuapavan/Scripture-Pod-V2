@@ -34,7 +34,7 @@
         if (!hasValidScheduleSelection) selectItem(0);
       }
     }
-    
+
     // ===== UI RENDER =====
     let _acBooks = [];
     let _acIdx = -1;
@@ -241,20 +241,20 @@
     function updateBibleLists() {
       const bookSelect = document.getElementById('bible-book-select');
       const chapSelect = document.getElementById('bible-chap-select');
-      
+
       if (!bookSelect || !chapSelect) return;
-      
+
       bookSelect.innerHTML = `<option value="">${esc(t('ui_select_book'))}</option>`;
       chapSelect.innerHTML = `<option value="">${esc(t('ui_chapter_short'))}</option>`;
       chapSelect.disabled = true;
-      
+
       if (!activeBibleVersion || !bibles[activeBibleVersion]) return;
-      
+
       const uniqueBooks = [...new Set(bibles[activeBibleVersion].map(c => {
         const parts = c.title.split(' ');
         return parts.slice(0, -1).join(' ');
       }))];
-      
+
       uniqueBooks.forEach(book => {
         const opt = document.createElement('option');
         opt.value = book;
@@ -279,23 +279,23 @@
       const bookSelect = document.getElementById('bible-book-select');
       const chapSelect = document.getElementById('bible-chap-select');
       const book = bookSelect.value;
-      
+
       chapSelect.innerHTML = `<option value="">${esc(t('ui_chapter_short'))}</option>`;
-      
+
       if (!book || !activeBibleVersion || !bibles[activeBibleVersion]) {
         chapSelect.disabled = true;
         return;
       }
-      
+
       chapSelect.disabled = false;
-      
+
       const chapters = bibles[activeBibleVersion]
         .filter(c => {
           const bookPart = c.title.split(' ').slice(0, -1).join(' ');
           return bookPart === book;
         })
         .map(c => c.title.split(' ').pop());
-      
+
       const uniqueChaps = [...new Set(chapters)].sort((a, b) => parseInt(a) - parseInt(b));
       uniqueChaps.forEach(chap => {
         const opt = document.createElement('option');
@@ -312,15 +312,15 @@
       const chapSelect = document.getElementById('bible-chap-select');
       const book = bookSelect.value;
       const chap = chapSelect.value;
-      
+
       if (!book || !chap || !activeBibleVersion || !bibles[activeBibleVersion]) return;
-      
+
       const idx = bibles[activeBibleVersion].findIndex(c => {
         const bookPart = c.title.split(' ').slice(0, -1).join(' ');
         const chapPart = c.title.split(' ').pop();
         return bookPart === book && chapPart === chap;
       });
-      
+
       if (idx !== -1) selectItem(idx);
       if (idx !== -1) {
         const picked = bibles[activeBibleVersion][idx];
@@ -1348,6 +1348,10 @@
           showToast(t('backup_unsupported_version'));
           return;
         }
+        if (!parsed.data || typeof parsed.data !== 'object' || Array.isArray(parsed.data)) {
+          showToast(t('backup_invalid_file'));
+          return;
+        }
         pendingBackupData = parsed;
         showConfirm(t('settings_backup_import'), t('backup_import_overwrite_confirm'), (ok) => {
           if (!ok) return;
@@ -1428,7 +1432,9 @@
         sendSyncState();
         showToast(t('backup_imported_successfully'));
       } catch (e) {
-        showToast(t('backup_import_failed'));
+        console.error('Backup import restore failed', e);
+        const reason = e && e.message ? `: ${e.message}` : '';
+        showToast(`${t('backup_import_failed')}${reason}`);
       } finally {
         isRestoringBackup = false;
       }
@@ -1695,7 +1701,7 @@
         ...xml.querySelectorAll('book, b, bible>b, testament>book'),
         ...Array.from(xml.getElementsByTagName('BIBLEBOOK'))
       ];
-      
+
       books.forEach(b => {
         const bNum = getAttr(b, ['number', 'n', 'bnumber']);
         const bNumKey = bNum ? String(parseInt(bNum, 10)) : null;
@@ -1703,26 +1709,26 @@
                     getAttr(b, ['name', 'n', 'bname']) ||
                     (bNumKey ? BIBLE_BOOKS[bNumKey] : null) ||
                     "Unknown";
-        
+
         const chapters = [
           ...b.querySelectorAll('chapter, c, book>chapter'),
           ...Array.from(b.getElementsByTagName('CHAPTER'))
         ];
-        
+
         chapters.forEach(c => {
           const cNum = getAttr(c, ['number', 'n', 'cnumber']) || "1";
           let content = `[${bName} ${cNum}]\n`;
-          
+
           const verses = [
             ...c.querySelectorAll('verse, v, chapter>verse'),
             ...Array.from(c.getElementsByTagName('VERS'))
           ];
-          
+
           verses.forEach(v => {
             const vn = getAttr(v, ['number', 'n', 'vnumber']) || "1";
             content += `${vn} ${v.textContent.trim()}\n`;
           });
-          
+
           result.push({
             title: `${bName} ${cNum}`,
             content,
@@ -1732,7 +1738,7 @@
           });
         });
       });
-      
+
       if (result.length === 0) {
         const allChapters = [
           ...xml.querySelectorAll('c'),
@@ -1748,7 +1754,7 @@
                         "Unknown";
           const cNum = getAttr(c, ['n', 'cnumber', 'number']) || "1";
           let content = `[${bName} ${cNum}]\n`;
-          
+
           const verses = [
             ...c.querySelectorAll('v'),
             ...Array.from(c.getElementsByTagName('VERS'))
@@ -1757,7 +1763,7 @@
             const vn = getAttr(v, ['n', 'vnumber', 'number']) || "1";
             content += `${vn} ${v.textContent.trim()}\n`;
           });
-          
+
           result.push({
             title: `${bName} ${cNum}`,
             content,
@@ -1767,7 +1773,7 @@
           });
         });
       }
-      
+
       return result;
     }
 
