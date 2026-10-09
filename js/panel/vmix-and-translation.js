@@ -75,8 +75,39 @@
       } catch (error) {
         localServerInfo = null;
       }
+      const displayUrlEl = document.getElementById('network-display-url');
+      if (displayUrlEl) displayUrlEl.value = localServerInfo?.displayUrl || '';
       updateVmixStatusUi();
       return localServerInfo;
+    }
+
+    async function refreshLocalDisplayUrl() {
+      const info = await refreshLocalServerInfo();
+      if (!info) {
+        showToast('Local display URL is only available in the desktop app');
+        return;
+      }
+      showToast('Local display URL refreshed');
+    }
+
+    async function copyLocalDisplayUrl() {
+      const info = localServerInfo || await refreshLocalServerInfo();
+      if (!info?.displayUrl) {
+        showToast('Local display URL is only available in the desktop app');
+        return;
+      }
+      try {
+        if (window.BSPDesktop && typeof window.BSPDesktop.copyText === 'function') {
+          await window.BSPDesktop.copyText(info.displayUrl);
+        } else if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(info.displayUrl);
+        } else {
+          throw new Error('Clipboard unavailable');
+        }
+        showToast('Display URL copied');
+      } catch (error) {
+        showToast('Unable to copy display URL');
+      }
     }
 
     function getVmixDisplayUrl() {

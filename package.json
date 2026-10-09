@@ -19,8 +19,7 @@
     "appId": "com.scripturepodpro.desktop",
     "productName": "Scripture Pod Pro",
     "files": [
-      "Scripture Pod Pro Panel.html",
-      "Scripture Pod Pro_display.html",
+      "UI/**/*",
       "index.html",
       "assets/**/*",
       "js/**/*",
@@ -48,8 +47,7 @@
         "nsis",
         "portable"
       ],
-      "icon": "scripture-pod-pro.ico",
-      "publisherName": "Johnson Olakotan"
+      "icon": "scripture-pod-pro.ico"
     },
     "nsis": {
       "oneClick": false,

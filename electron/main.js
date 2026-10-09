@@ -13,6 +13,9 @@ let relayServer = null;
 const relayClients = new Set();
 const LOCAL_HTTP_PORT = 5510;
 const LOCAL_RELAY_PORT = 5511;
+let httpServerReady = false;
+let relayServerReady = false;
+let displayUrlLogged = false;
 
 function resolveAppFile(name) {
   return path.join(__dirname, '..', name);
@@ -51,17 +54,23 @@ function getLocalServerInfo() {
     relayPort: LOCAL_RELAY_PORT,
     preferredHost,
     availableHosts: ['127.0.0.1', ...addresses],
-    displayPath: '/Scripture Pod Pro_display.html',
-    displayUrl: `http://${preferredHost}:${LOCAL_HTTP_PORT}/Scripture%20Pod%20Pro_display.html?hostMode=vmix&relay=ws://${preferredHost}:${LOCAL_RELAY_PORT}`,
+    displayPath: '/UI/Scripture%20Pod%20Pro_display.html',
+    displayUrl: `http://${preferredHost}:${LOCAL_HTTP_PORT}/UI/Scripture%20Pod%20Pro_display.html?hostMode=vmix&relay=ws://${preferredHost}:${LOCAL_RELAY_PORT}`,
     relayUrl: `ws://${preferredHost}:${LOCAL_RELAY_PORT}`
   };
+}
+
+function logDisplayUrlWhenReady() {
+  if (displayUrlLogged || !httpServerReady || !relayServerReady) return;
+  displayUrlLogged = true;
+  console.log(`Scripture Pod Pro display URL: ${getLocalServerInfo().displayUrl}`);
 }
 
 function startHttpServer() {
   if (httpServer) return;
   httpServer = http.createServer((req, res) => {
     const url = new URL(req.url || '/', `http://${req.headers.host || '127.0.0.1'}`);
-    const pathname = decodeURIComponent(url.pathname === '/' ? '/Scripture%20Pod%20Pro_display.html' : url.pathname);
+    const pathname = decodeURIComponent(url.pathname === '/' ? '/UI/Scripture%20Pod%20Pro_display.html' : url.pathname);
     const target = resolveAppFile(pathname.replace(/^\/+/, ''));
     if (!target.startsWith(path.join(__dirname, '..'))) {
       res.writeHead(403);
@@ -78,12 +87,20 @@ function startHttpServer() {
       res.end(data);
     });
   });
+  httpServer.once('listening', () => {
+    httpServerReady = true;
+    logDisplayUrlWhenReady();
+  });
   httpServer.listen(LOCAL_HTTP_PORT, '0.0.0.0');
 }
 
 function startRelayServer() {
   if (relayServer) return;
   relayServer = new WebSocketServer({ host: '0.0.0.0', port: LOCAL_RELAY_PORT });
+  relayServer.once('listening', () => {
+    relayServerReady = true;
+    logDisplayUrlWhenReady();
+  });
   relayServer.on('connection', (socket) => {
     relayClients.add(socket);
     socket.on('close', () => relayClients.delete(socket));
@@ -121,7 +138,7 @@ function createMainWindow() {
     }
   });
 
-  mainWindow.loadFile(resolveAppFile('Scripture Pod Pro Panel.html'));
+  mainWindow.loadFile(resolveAppFile(path.join('UI', 'Scripture Pod Pro Panel.html')));
   mainWindow.on('closed', () => {
     mainWindow = null;
     if (outputWindow && !outputWindow.isDestroyed()) {
@@ -166,7 +183,7 @@ function createOutputWindow(options = {}) {
     }
   });
 
-  outputWindow.loadFile(resolveAppFile('Scripture Pod Pro_display.html'), {
+  outputWindow.loadFile(resolveAppFile(path.join('UI', 'Scripture Pod Pro_display.html')), {
     query: {
       standalone: '1',
       hostMode: 'standalone'
