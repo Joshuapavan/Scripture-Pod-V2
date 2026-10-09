@@ -124,7 +124,7 @@ npm run dist:linux
 chmod +x "dist/Scripture Pod Pro-*.AppImage"
 ```
 
-   - Run the AppImage directly.
+- Run the AppImage directly.
 
 4. If using the Linux zip archive:
    - Extract the archive.
