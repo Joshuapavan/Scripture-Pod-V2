@@ -17458,7 +17458,7 @@
           <div class="settings-category-content">
             <div class="settings-field">
               <label class="settings-label" data-i18n="settings_background_type">Background Type</label>
-              <select id="bg-type" class="settings-select" onchange="handleBgTypeChange();onAnyControlChange()">
+              <select id="bg-type" class="settings-select" onchange="setBgTypePicker(this.value)">
                 <option value="color" data-i18n="settings_solid_color">Color</option>
                 <option value="image" data-i18n="settings_image">Image</option>
                 <option value="video" data-i18n="settings_video">Video</option>

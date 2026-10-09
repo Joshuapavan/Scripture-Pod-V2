@@ -122,6 +122,13 @@
       const sel = document.getElementById('bg-type');
       if (sel) {
         sel.value = type;
+        if (type === 'image' || type === 'video') {
+          const bgToggle = document.getElementById('bg-toggle');
+          if (bgToggle && !bgToggle.checked) {
+            bgToggle.checked = true;
+            if (sidebarTab === 'songs' && activeRatio === '16-9') songBgUserOn = true;
+          }
+        }
         handleBgTypeChange();
         onAnyControlChange();
       }
