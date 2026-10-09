@@ -2560,6 +2560,7 @@
     }
 
     const seamlessLoopControllers = new WeakMap();
+    const videoStateGenerations = new WeakMap();
     function hideVideoElement(videoEl, clearSrc = false) {
       if (!videoEl) return;
       videoEl.style.display = 'none';
@@ -2573,34 +2574,7 @@
     }
 
     function getSeamlessLoopController(primaryEl) {
-      if (!primaryEl || !primaryEl.parentElement) return null;
-      let controller = seamlessLoopControllers.get(primaryEl);
-      if (controller) return controller;
-      const secondaryEl = document.createElement('video');
-      secondaryEl.className = primaryEl.className;
-      secondaryEl.muted = true;
-      secondaryEl.playsInline = true;
-      secondaryEl.preload = 'auto';
-      secondaryEl.setAttribute('aria-hidden', 'true');
-      secondaryEl.style.display = 'none';
-      secondaryEl.style.opacity = '0';
-      secondaryEl.style.pointerEvents = 'none';
-      primaryEl.insertAdjacentElement('afterend', secondaryEl);
-      controller = {
-        primary: primaryEl,
-        secondary: secondaryEl,
-        active: primaryEl,
-        inactive: secondaryEl,
-        rafId: 0,
-        swapping: false,
-        enabled: false,
-        nativeLoopFallback: false,
-        src: '',
-        playbackRate: 1,
-        revealOpacity: 1
-      };
-      seamlessLoopControllers.set(primaryEl, controller);
-      return controller;
+      return null;
     }
 
     function stopSeamlessLoop(controller, opts = {}) {
@@ -2724,6 +2698,8 @@
       const srcChanged = nextSrc && nextSrc !== prevSrc;
       const wantsFadeOut = !!options.fadeOut;
       const loopController = getSeamlessLoopController(videoEl);
+      const generation = (videoStateGenerations.get(videoEl) || 0) + 1;
+      videoStateGenerations.set(videoEl, generation);
       if (srcChanged && loopController) loopController.nativeLoopFallback = false;
       if (loopController && (!loop || !nextSrc || !shouldPlay || srcChanged)) {
         stopSeamlessLoop(loopController, { clearSrc: !nextSrc && !wantsFadeOut, resetActiveToPrimary: true });
@@ -2797,10 +2773,13 @@
           videoEl.style.display = 'block';
           videoEl.style.opacity = '0';
           const reveal = () => {
+            if (videoStateGenerations.get(videoEl) !== generation) return;
             videoEl.style.transition = 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
             videoEl.style.opacity = `${revealOpacity}`;
             // Clean up transition after it completes
-            setTimeout(() => { videoEl.style.transition = ''; }, 450);
+            setTimeout(() => {
+              if (videoStateGenerations.get(videoEl) === generation) videoEl.style.transition = '';
+            }, 450);
           };
           if (videoEl.readyState >= 2) {
             // Already buffered enough
@@ -2830,6 +2809,7 @@
           if (loopController.inactive) hideVideoElement(loopController.inactive, false);
         }
         setTimeout(() => {
+          if (videoStateGenerations.get(videoEl) !== generation) return;
           videoEl.style.transition = '';
           videoEl.style.display = 'none';
           if (!videoEl.paused) videoEl.pause();
