@@ -145,6 +145,11 @@
       const src = document.getElementById('bg-image-source').value;
       document.getElementById('bg-url-row').style.display = (src === 'url') ? 'block' : 'none';
       document.getElementById('bg-upload-row').style.display = (src === 'upload') ? 'block' : 'none';
+      if (src === 'upload' && bgUploadDataUrl) {
+        cacheBackgroundMediaForOutput(bgUploadDataUrl).catch((error) => {
+          console.error('Background image registration failed', error);
+        });
+      }
     }
 
     function handleBgVideoSourceChange() {
@@ -158,9 +163,15 @@
       const file = input.files && input.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = async () => {
         bgUploadDataUrl = reader.result;
         document.getElementById('bg-upload-hint').innerText = "Image selected ✓";
+        try {
+          await cacheBackgroundMediaForOutput(bgUploadDataUrl);
+        } catch (error) {
+          console.error('Background image registration failed', error);
+          showToast('Background image could not be prepared for display');
+        }
         saveToStorageDebounced();
         onAnyControlChange();
         persistBackgroundState();
@@ -173,10 +184,16 @@
       const file = input.files && input.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = async () => {
         bgVideoUploadDataUrl = reader.result;
         document.getElementById('bg-video-upload-hint').innerText = "Video selected ✓";
-        sendBackgroundVideoPreload();
+        try {
+          await cacheBackgroundMediaForOutput(bgVideoUploadDataUrl);
+          await sendBackgroundVideoPreload();
+        } catch (error) {
+          console.error('Background video registration failed', error);
+          showToast('Background video could not be prepared for display');
+        }
         saveToStorageDebounced();
         onAnyControlChange();
         persistBackgroundState();

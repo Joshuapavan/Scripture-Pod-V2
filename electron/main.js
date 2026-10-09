@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, screen, shell, clipboard, dialog } = require('electron');
 const path = require('path');
 const os = require('os');
+const crypto = require('crypto');
 const fs = require('fs');
 const http = require('http');
 const { WebSocketServer } = require('ws');
@@ -11,8 +12,10 @@ let outputClosedCallbacks = new Set();
 let httpServer = null;
 let relayServer = null;
 const relayClients = new Set();
+const backgroundMedia = new Map();
 const LOCAL_HTTP_PORT = 5510;
 const LOCAL_RELAY_PORT = 5511;
+let backgroundMediaDirectory = '';
 let httpServerReady = false;
 let relayServerReady = false;
 let displayUrlLogged = false;
@@ -66,10 +69,61 @@ function logDisplayUrlWhenReady() {
   console.log(`Scripture Pod Pro display URL: ${getLocalServerInfo().displayUrl}`);
 }
 
+async function serveBackgroundMedia(req, res, id) {
+  const media = backgroundMedia.get(id);
+  if (!media) {
+    res.writeHead(404);
+    res.end('Media not found');
+    return;
+  }
+  try {
+    const { size } = await fs.promises.stat(media.filePath);
+    const headers = {
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'private, max-age=3600',
+      'Content-Type': media.mimeType
+    };
+    const range = req.headers.range;
+    if (range) {
+      const match = range.match(/^bytes=(\d*)-(\d*)$/);
+      if (!match || (!match[1] && !match[2])) {
+        res.writeHead(416, { 'Content-Range': `bytes */${size}` });
+        res.end();
+        return;
+      }
+      const start = match[1] ? Number(match[1]) : Math.max(0, size - Number(match[2]));
+      const end = match[1] ? Math.min(Number(match[2] || size - 1), size - 1) : size - 1;
+      if (start >= size || end < start) {
+        res.writeHead(416, { 'Content-Range': `bytes */${size}` });
+        res.end();
+        return;
+      }
+      headers['Content-Range'] = `bytes ${start}-${end}/${size}`;
+      headers['Content-Length'] = end - start + 1;
+      res.writeHead(206, headers);
+      if (req.method === 'HEAD') res.end();
+      else fs.createReadStream(media.filePath, { start, end }).pipe(res);
+      return;
+    }
+    headers['Content-Length'] = size;
+    res.writeHead(200, headers);
+    if (req.method === 'HEAD') res.end();
+    else fs.createReadStream(media.filePath).pipe(res);
+  } catch (error) {
+    if (!res.headersSent) res.writeHead(404);
+    res.end('Media unavailable');
+  }
+}
+
 function startHttpServer() {
   if (httpServer) return;
   httpServer = http.createServer((req, res) => {
     const url = new URL(req.url || '/', `http://${req.headers.host || '127.0.0.1'}`);
+    const mediaMatch = url.pathname.match(/^\/background-media\/([a-f0-9-]+)$/i);
+    if (mediaMatch) {
+      serveBackgroundMedia(req, res, mediaMatch[1]);
+      return;
+    }
     const pathname = decodeURIComponent(url.pathname === '/' ? '/UI/Scripture%20Pod%20Pro_display.html' : url.pathname);
     const target = resolveAppFile(pathname.replace(/^\/+/, ''));
     if (!target.startsWith(path.join(__dirname, '..'))) {
@@ -267,6 +321,22 @@ app.whenReady().then(() => {
     return { ok: true };
   });
   ipcMain.handle('bsp:get-local-server-info', () => getLocalServerInfo());
+  ipcMain.handle('bsp:cache-background-media', async (_event, dataUrl) => {
+    const match = String(dataUrl || '').match(/^data:(image|video)\/([a-z0-9.+-]+);base64,([a-z0-9+/=\s]+)$/i);
+    if (!match) throw new Error('Unsupported background media data');
+    const buffer = Buffer.from(match[3], 'base64');
+    if (!buffer.length) throw new Error('Background media is empty');
+    const id = crypto.randomUUID();
+    const mimeType = `${match[1]}/${match[2]}`.toLowerCase();
+    if (!backgroundMediaDirectory) {
+      backgroundMediaDirectory = await fs.promises.mkdtemp(path.join(app.getPath('temp'), 'scripture-pod-media-'));
+    }
+    const filePath = path.join(backgroundMediaDirectory, `${id}.${match[2].toLowerCase()}`);
+    await fs.promises.writeFile(filePath, buffer);
+    backgroundMedia.set(id, { filePath, mimeType });
+    const host = getLocalServerInfo().preferredHost;
+    return { url: `http://${host}:${LOCAL_HTTP_PORT}/background-media/${id}` };
+  });
   ipcMain.handle('bsp:copy-text', (_event, text) => {
     clipboard.writeText(String(text || ''));
     return { ok: true };
@@ -318,6 +388,12 @@ app.whenReady().then(() => {
   startHttpServer();
   startRelayServer();
   createMainWindow();
+
+  app.on('will-quit', () => {
+    if (backgroundMediaDirectory) {
+      fs.promises.rm(backgroundMediaDirectory, { recursive: true, force: true }).catch(() => {});
+    }
+  });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createMainWindow();

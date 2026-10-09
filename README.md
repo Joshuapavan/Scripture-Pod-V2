@@ -22,13 +22,6 @@ npm install
 ```bash
 npm start
 ```
-
-3. Run only the feedback backend (optional):
-
-```bash
-npm run feedback:server
-```
-
 ## Run in a browser (panel + display)
 
 You can open the following files directly in a modern browser for quick testing (not packaged):
@@ -142,7 +135,6 @@ Notes:
 - `js/` — application JavaScript modules used by the panel
 - `electron/` — Electron bootstrap (main, preload, helpers)
 - `electron/resources/` — app icon assets for macOS, Windows, and Linux
-- `server/feedback-backend.js` — optional local feedback server
 
 ## Troubleshooting
 

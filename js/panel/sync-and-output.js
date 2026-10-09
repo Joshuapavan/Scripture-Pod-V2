@@ -60,6 +60,52 @@
     let lastRelayBgImage = RELAY_MEDIA_UNSET;
     let lastRelayBgVideo = RELAY_MEDIA_UNSET;
     let backgroundVideoPreloadTimer = null;
+    const backgroundMediaUrlCache = new Map();
+    const backgroundMediaPending = new Map();
+
+    function cacheBackgroundMediaForOutput(source) {
+      if (typeof source !== 'string' || !source.startsWith('data:')) return Promise.resolve(source);
+      if (!(window.BSPDesktop && typeof window.BSPDesktop.cacheBackgroundMedia === 'function')) return Promise.resolve(source);
+      if (backgroundMediaUrlCache.has(source)) return Promise.resolve(backgroundMediaUrlCache.get(source));
+      if (backgroundMediaPending.has(source)) return backgroundMediaPending.get(source);
+      const pending = window.BSPDesktop.cacheBackgroundMedia(source).then((result) => {
+        if (!result?.url) throw new Error('Background media URL was not returned');
+        backgroundMediaUrlCache.set(source, result.url);
+        if (isLive) scheduleLiveUpdate();
+        return result.url;
+      }).finally(() => {
+        backgroundMediaPending.delete(source);
+      });
+      backgroundMediaPending.set(source, pending);
+      return pending;
+    }
+
+    function getOutputMediaSource(source) {
+      if (typeof source !== 'string' || !source.startsWith('data:')) return source;
+      return backgroundMediaUrlCache.get(source) || null;
+    }
+
+    function mapOutputMessageMedia(message) {
+      if (message.type === 'UPDATE' || message.type === 'PRELOAD_BACKGROUND') {
+        const mapped = { ...message };
+        ['bgImage', 'bgVideo'].forEach((key) => {
+          if (typeof mapped[key] === 'string' && mapped[key].startsWith('data:')) {
+            mapped[key] = getOutputMediaSource(mapped[key]);
+          }
+        });
+        return mapped;
+      }
+      if (message.type === 'SYNC_STATE' && message.state?.kind === 'update' && message.state.payload) {
+        return {
+          ...message,
+          state: {
+            ...message.state,
+            payload: mapOutputMessageMedia({ type: 'UPDATE', ...message.state.payload })
+          }
+        };
+      }
+      return message;
+    }
 
     function compactRelayMedia(message) {
       if (message.type === 'PRELOAD_BACKGROUND') {
@@ -82,14 +128,22 @@
       return compacted;
     }
 
-    function sendBackgroundVideoPreload() {
+    async function sendBackgroundVideoPreload() {
       if (document.getElementById('bg-type')?.value !== 'video') return;
       const source = document.getElementById('bg-video-source')?.value || 'upload';
-      const videoUrl = source === 'upload'
+      const videoData = source === 'upload'
         ? bgVideoUploadDataUrl
         : String(document.getElementById('bg-video-url')?.value || '').trim();
-      if (!videoUrl) return;
-      if (lastLiveState?.kind === 'update' && lastLiveState.payload?.bgType === 'video' && lastLiveState.payload.bgVideo === videoUrl) return;
+      if (!videoData) return;
+      if (lastLiveState?.kind === 'update' && lastLiveState.payload?.bgType === 'video' && lastLiveState.payload.bgVideo === videoData) return;
+      let videoUrl = videoData;
+      try {
+        videoUrl = await cacheBackgroundMediaForOutput(videoData);
+      } catch (error) {
+        console.error('Background video registration failed', error);
+        showToast('Background video could not be prepared for display');
+        return;
+      }
       broadcastMessage({
         type: 'PRELOAD_BACKGROUND',
         bgVideo: videoUrl,
@@ -121,10 +175,11 @@
         seq: nextSeq(),
         state
       };
-      broadcastMessage(msg);
+      const outputMessage = mapOutputMessageMedia(msg);
+      broadcastMessage(outputMessage);
       try {
         if (window.parent && window.parent !== window) {
-          window.parent.postMessage({ source: 'bsp-panel-parent', message: msg }, '*');
+          window.parent.postMessage({ source: 'bsp-panel-parent', message: outputMessage }, '*');
         }
       } catch (_) {}
     }
@@ -334,14 +389,15 @@
     }
 
     function broadcastMessage(msg) {
-      if (!isVmixMode() && channel) channel.postMessage(msg);
-      const relayMessage = compactRelayMedia(msg);
+      const outputMessage = mapOutputMessageMedia(msg);
+      if (!isVmixMode() && channel) channel.postMessage(outputMessage);
+      const relayMessage = compactRelayMedia(outputMessage);
       relaySend(relayMessage);
       if (isVmixMode() && window.BSPDesktop && typeof window.BSPDesktop.sendVmixOutputMessage === 'function') {
         window.BSPDesktop.sendVmixOutputMessage(relayMessage).catch(() => {});
       }
-      if (isVmixMode() && channel) channel.postMessage(msg);
-      mirrorSyncMessage(msg);
+      if (isVmixMode() && channel) channel.postMessage(outputMessage);
+      mirrorSyncMessage(outputMessage);
     }
 
     function pingDisplays() {
@@ -393,13 +449,14 @@
         displayViewportHeight: viewport.height,
         ...payload
       };
-      broadcastMessage(msg);
+      const outputMessage = mapOutputMessageMedia(msg);
+      broadcastMessage(outputMessage);
       try {
         if (window.parent && window.parent !== window) {
-          window.parent.postMessage({ source: 'bsp-panel-parent', message: msg }, '*');
+          window.parent.postMessage({ source: 'bsp-panel-parent', message: outputMessage }, '*');
         }
       } catch (_) {}
-      embeddedProgramDisplayState = { kind: 'update', payload: msg };
+      embeddedProgramDisplayState = { kind: 'update', payload: outputMessage };
       syncEmbeddedProgramDisplay();
       syncStandaloneOutputDirect();
       syncLsProjectionPreview();

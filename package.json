@@ -8,7 +8,6 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "feedback:server": "node server/feedback-backend.js",
     "pack:mac": "electron-builder --mac dir",
     "dist:mac": "electron-builder --mac",
     "pack:win": "electron-builder --win nsis portable",

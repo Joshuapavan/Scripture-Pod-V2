@@ -25,6 +25,9 @@ const BSPDesktop = {
   async getLocalServerInfo() {
     return ipcRenderer.invoke('bsp:get-local-server-info');
   },
+  async cacheBackgroundMedia(dataUrl) {
+    return ipcRenderer.invoke('bsp:cache-background-media', dataUrl);
+  },
   async copyText(text) {
     return ipcRenderer.invoke('bsp:copy-text', text);
   },

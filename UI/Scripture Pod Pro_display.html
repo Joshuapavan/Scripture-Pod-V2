@@ -1106,8 +1106,7 @@
                 bgVideoSpeed: d.bgVideoSpeed || 1
               };
             }
-            const isPlaying = videoEl && videoEl.style.display !== 'none' && !videoEl.paused;
-            if (src && !isGifSource(src) && !getYouTubeInfo(src) && videoEl && videoEl.dataset.src !== src && !isPlaying) {
+            if (src && !isGifSource(src) && !getYouTubeInfo(src) && videoEl && videoEl.dataset.src !== src) {
               syncVideoState(videoEl, src, false, {
                 loop: d.bgVideoLoop !== false,
                 playbackRate: d.bgVideoSpeed || 1
