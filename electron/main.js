@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen, shell, clipboard } = require('electron');
+const { app, BrowserWindow, ipcMain, screen, shell, clipboard, dialog } = require('electron');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
@@ -270,6 +270,30 @@ app.whenReady().then(() => {
   ipcMain.handle('bsp:copy-text', (_event, text) => {
     clipboard.writeText(String(text || ''));
     return { ok: true };
+  });
+  ipcMain.handle('bsp:save-backup', async (_event, { filename, contents } = {}) => {
+    if (typeof contents !== 'string') throw new Error('Backup contents must be text');
+    const result = await dialog.showSaveDialog(mainWindow || undefined, {
+      title: 'Export Backup',
+      defaultPath: filename || 'ScripturePodPro_Backup.json',
+      filters: [{ name: 'JSON Backup', extensions: ['json'] }]
+    });
+    if (result.canceled || !result.filePath) return { canceled: true };
+    await fs.promises.writeFile(result.filePath, contents, 'utf8');
+    return { ok: true, filePath: result.filePath };
+  });
+  ipcMain.handle('bsp:open-backup', async () => {
+    const result = await dialog.showOpenDialog(mainWindow || undefined, {
+      title: 'Import Backup',
+      properties: ['openFile'],
+      filters: [{ name: 'JSON Backup', extensions: ['json'] }]
+    });
+    if (result.canceled || !result.filePaths.length) return { canceled: true };
+    const filePath = result.filePaths[0];
+    return {
+      name: path.basename(filePath),
+      contents: await fs.promises.readFile(filePath, 'utf8')
+    };
   });
 
   ipcMain.handle('bsp:request-output-fullscreen', () => {

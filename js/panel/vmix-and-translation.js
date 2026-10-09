@@ -39,7 +39,7 @@
       if (bodyEl) bodyEl.style.display = panel?.classList.contains('is-collapsed') ? 'none' : 'flex';
       if (toggleEl) toggleEl.textContent = panel?.classList.contains('is-collapsed') ? '>' : 'v';
       if (connectionEl) {
-        if (!vmixState.enabled) connectionEl.textContent = 'vMix disabled';
+        if (!vmixState.enabled) connectionEl.textContent = 'vMix integration disabled';
         else if (vmixConnectionState === 'connected') connectionEl.textContent = 'vMix connected';
         else if (vmixConnectionState === 'connecting') connectionEl.textContent = 'Connecting to vMix...';
         else if (vmixConnectionState === 'error') connectionEl.textContent = `vMix error: ${vmixLastError || 'Unknown error'}`;

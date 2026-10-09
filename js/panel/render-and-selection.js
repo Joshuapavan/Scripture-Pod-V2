@@ -1249,6 +1249,13 @@
         };
         const json = safeStringify(backup);
         if (!json) throw new Error('Backup stringify failed');
+        if (window.BSPDesktop && typeof window.BSPDesktop.saveBackup === 'function') {
+          const result = await window.BSPDesktop.saveBackup(filename, json);
+          if (result?.canceled) return;
+          if (!result?.ok) throw new Error('Desktop backup save failed');
+          showToast(t('backup_exported_named').replace('{filename}', filename));
+          return;
+        }
         if (saveHandle) {
           try {
             const writable = await saveHandle.createWritable();
@@ -1328,7 +1335,20 @@
       }
     }
 
-    function triggerBackupImport() {
+    async function triggerBackupImport() {
+      if (window.BSPDesktop && typeof window.BSPDesktop.openBackup === 'function') {
+        try {
+          const result = await window.BSPDesktop.openBackup();
+          if (result?.canceled) return;
+          if (typeof result?.contents !== 'string') throw new Error('No backup file contents returned');
+          await handleBackupImportText(result.contents, result.name);
+        } catch (e) {
+          console.error('Backup file open failed', e);
+          const reason = e && e.message ? `: ${e.message}` : '';
+          showToast(`${t('backup_import_failed')}${reason}`);
+        }
+        return;
+      }
       const input = document.getElementById('backup-import-file');
       if (input) input.click();
     }
@@ -1338,7 +1358,16 @@
       input.value = '';
       if (!file) return;
       try {
-        const text = await file.text();
+        await handleBackupImportText(await file.text(), file.name);
+      } catch (e) {
+        console.error('Backup file read failed', e);
+        const reason = e && e.message ? `: ${e.message}` : '';
+        showToast(`${t('backup_import_failed')}${reason}`);
+      }
+    }
+
+    async function handleBackupImportText(text, fileName = '') {
+      try {
         const parsed = JSON.parse(text);
         if (!parsed || parsed.app !== 'Scripture Pod Pro') {
           showToast(t('backup_invalid_file'));
@@ -1358,7 +1387,8 @@
           applyBackupImport(pendingBackupData);
         });
       } catch (e) {
-        showToast(t('backup_invalid_file'));
+        console.error(`Backup import validation failed${fileName ? ` (${fileName})` : ''}`, e);
+        showToast(`${t('backup_invalid_file')}${e && e.message ? `: ${e.message}` : ''}`);
       }
     }
 

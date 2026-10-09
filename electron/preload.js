@@ -28,6 +28,12 @@ const BSPDesktop = {
   async copyText(text) {
     return ipcRenderer.invoke('bsp:copy-text', text);
   },
+  async saveBackup(filename, contents) {
+    return ipcRenderer.invoke('bsp:save-backup', { filename, contents });
+  },
+  async openBackup() {
+    return ipcRenderer.invoke('bsp:open-backup');
+  },
   async getSystemStats() {
     return ipcRenderer.invoke('bsp:get-system-stats');
   },
