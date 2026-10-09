@@ -59,6 +59,7 @@ This is a browser-based network display, not an NDI output stream. Both computer
 Install dev dependencies (already in `package.json`) and run the appropriate script. Example (mac):
 
 ```bash
+npm install
 npm run dist:mac
 ```
 
@@ -71,7 +72,68 @@ npm run dist:mac -- --arm64
 npm run dist:mac -- --x64
 ```
 
-Build Windows installers with `npm run dist:win` and Linux packages with `npm run dist:linux`. For reliable releases, build each target on its corresponding operating system.
+Build Windows installers with:
+
+```bash
+npm run dist:win
+```
+
+Build Linux packages with:
+
+```bash
+npm run dist:linux
+```
+
+For reliable releases, build each target on its corresponding operating system.
+
+## Installation instructions
+
+### Windows
+
+1. Build the installer from a Windows machine:
+
+```powershell
+npm install
+npm run dist:win
+```
+
+2. Open the generated file in the `dist/` folder.
+3. Install the app using the `.exe` installer or run the portable `.exe` version if you do not want a full install.
+4. If Windows Defender or SmartScreen shows a warning, click **More info** and then **Run anyway**.
+5. Launch the app normally from the Start menu or desktop shortcut.
+
+Notes:
+
+- The NSIS installer creates a standard Windows app install.
+- The portable build can be copied to another machine without a formal installation.
+
+### Linux
+
+1. Build the package on Linux:
+
+```bash
+npm install
+npm run dist:linux
+```
+
+2. Open the generated files in the `dist/` folder.
+3. For an AppImage:
+   - Mark it executable if needed:
+
+```bash
+chmod +x "dist/Scripture Pod Pro-*.AppImage"
+```
+
+   - Run the AppImage directly.
+
+4. If using the Linux zip archive:
+   - Extract the archive.
+   - Run the contained executable from the extracted folder, or move it into your applications directory.
+
+Notes:
+
+- AppImage is the easiest option for most Linux users.
+- If the system blocks execution, enable the app to run as a program or install the package from your distro's software center if you created a package format.
 
 ## Project layout (important files)
 
